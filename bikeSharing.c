@@ -1,7 +1,9 @@
 #include "bikeSharing.h"
 
-typedef struct {
+typedef struct bikeSharingCDT{
 
-}
+    TList first;
+
+}bikeSharingCDT;
 
 
