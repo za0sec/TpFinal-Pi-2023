@@ -12,12 +12,16 @@ typedef struct node{
     struct node * tail;
 }TNode;
 
+typedef struct stationData{
+    size_t stationId;
+    size_t trips;
+}stationData;
+
 typedef struct bikeSharingCDT{
     TList first;
-
-
+    struct stationData * rankingStations;
 }bikeSharingCDT;
-
+ // LLEGAMOS HASTA ACA
 bikeSharingADT newBikeSharing(){
     return calloc(1, sizeof(bikeSharingCDT));
 }

@@ -32,6 +32,11 @@ bikeSharingADT readAddCsv(const char * filename){
 
     fscanf(file, "%s\n", readText);
 
+    // example
+    // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
+    // 2021-09-20 06:31:28;348;2021-09-20 07:02:22;332;1
+    // 2022-09-02 11:19:47;753;2022-09-02 11:22:23;702;0
+
     char * startDate;
     
     size_t station1Id;
@@ -42,7 +47,13 @@ bikeSharingADT readAddCsv(const char * filename){
     
     size_t isMember;
 
-    
+    while( fgets(readText, MAXCHAR, file) != NULL ){
+        startDate = strtok(readText, ";");
+        station1Id = atoi(strtok(NULL, ";"));
+        endDate = strtok(NULL, ";");
+        station2Id = atoi(strtok(NULL, ";"));
+        isMember = atoi(strtok(NULL, "\n"));
+    } // LLEGAMOS HASTA ACA
 
 }
 
