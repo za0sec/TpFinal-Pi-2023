@@ -9,6 +9,7 @@ typedef struct node{
     size_t station2Id; //id de la estacion de fin
     size_t isMember; //0 si no es miembro, sino 1
     char * rideableType; //suponiendo que usamos el mismo ADT para las 2 ciudades
+    struct node * tail;
 }TNode;
 
 typedef struct bikeSharingCDT{
@@ -17,4 +18,6 @@ typedef struct bikeSharingCDT{
 
 }bikeSharingCDT;
 
-
+bikeSharingADT newBikeSharing(){
+    return calloc(1, sizeof(bikeSharingCDT));
+}
