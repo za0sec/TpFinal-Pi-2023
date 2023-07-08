@@ -10,6 +10,8 @@ int main( int argc, char * argv[] ){
         exit(ARERR);
     }
 
+    bikeSharingADT bikeSh = readAddCsv(argv[1]);
+
 }
 
 bikeSharingADT readAddCsv(const char * filename){
@@ -22,9 +24,25 @@ bikeSharingADT readAddCsv(const char * filename){
 
     bikeSharingADT bikeSharing = newBikeSharing();
     if( bikeSharing == NULL ){
-        fprintf(stderr, "Error creating file %s\n", filename);
-        exit(CRERR);
+        fprintf(stderr, "Memory Error");
+        exit(MEMERR);
     }
+
+    char readText[MAXCHAR];
+
+    fscanf(file, "%s\n", readText);
+
+    char * startDate;
+    
+    size_t station1Id;
+    
+    char * endDate;
+    
+    size_t station2Id;
+    
+    size_t isMember;
+
+    
 
 }
 
