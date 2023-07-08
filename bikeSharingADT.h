@@ -8,7 +8,7 @@ typedef struct bikeSharingCDT * bikeSharingADT;
 bikeSharingADT newBikeSharing();
 
 // Agrega un nodo a la lista
-bikeSharingADT add(bikeSharingADT bikesh, char * startDate, size_t station1Id, char * endDate, size_t station2Id, size_t isMember, char * rideableType);
+void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember);
 
 
 enum errors{OK = 0, ARERR, OPENERR, CRERR, MEMERR, };

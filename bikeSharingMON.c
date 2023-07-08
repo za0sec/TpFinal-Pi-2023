@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "bikeSharing.h"
+#include "bikeSharingADT.h"
 
 #define CHUNK 20
 
@@ -30,7 +30,7 @@ bikeSharingADT readAddCsv(const char * filename){
 
     char readText[MAXCHAR];
 
-    fscanf(file, "%s\n", readText);
+    fscanf(file, "%s\n", readText); /* salta la primer linea */
 
     // example
     // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
@@ -55,7 +55,15 @@ bikeSharingADT readAddCsv(const char * filename){
         isMember = atoi(strtok(NULL, "\n"));
     } // LLEGAMOS HASTA ACA
 
+    
+
 }
 
+//QUERY 1: INICIO DE VIAJES DE MIEMBROS POR ESTACION ORDENADOS DE MAYOR A MENOR
 
+//QUERY 2: CANTIDAD DE VIAJES DE A A B Y DE B A A, Y ASI SIGUE... (MATRIZ DE ADYACENCIA)
+
+//QUERY 3: CANTIDAD DE VIAJES POR MES DE CADA ESTACION, LISTAR ALFABETICAMENTE
+
+//QUERY 4: INICIO Y FIN MISMA ESTACION, ORDENAR ESTACIONES DE MAYOR A MENOR
 
