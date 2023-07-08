@@ -1,6 +1,6 @@
 #include "bikeSharingADT.h"
 
-/*typedef struct node * TList;
+typedef struct node * TList;
 
 typedef struct node{
     char * startDate;
@@ -11,15 +11,15 @@ typedef struct node{
     char * rideableType; //suponiendo que usamos el mismo ADT para las 2 ciudades
     struct node * tail;
 }TNode;
-*/
+
 typedef struct stationData{
     char * stationName; //TENEMOS QUE LEER EL OTRO ARCHIVO PARA CONSEGUIR EL NOMBRE DE LA ESTACION
-    size_t stationId;
     size_t memberTrips;
+    size_t used;
 }stationData;
 
 typedef struct bikeSharingCDT{
-    //TList first;
+    TList first;
     stationData * rankingStations;
     size_t dim;
 }bikeSharingCDT;
@@ -28,19 +28,37 @@ bikeSharingADT newBikeSharing(){
     return calloc(1, sizeof(bikeSharingCDT));
 }
 
-static int addRec(stationData * rankingStations, size_t station1Id){//SI DEVUELVO 0, LA ESTACION NO EXISTIA, SI DEVUELVO 1 ES QUE EXISTIA Y LE AGREGUE UN VIAJE
-    for(int i=0 ; i<dim ; i++){
-        if(rankingStations[i].stationId == station1Id){
-            rankingStations[i].memberTrips += 1;
-            return 1;
-        }
-    }
-    return 0;
-}
-
 void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
     if(isMember){
-        int aux = addRec(bikesh->rankingStations, station1Id);
+        if (dim < station1Id){
+            bikesh->rankingStation = realloc(bikesh->rankingStation, station1Id * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
+        
+            for(int i=dim; i<station1Id-1; i++){ // Voy hasta station1Id-1 porque ya voy a asignarle used a esta parte
+                bikesh->rankingStation[i].used = 0;
+            }
+            bikesh->dim = station1Id;
+
+            bikesh->rankingStation[station1Id-1].used = 1;
+            bikesh->rankingStation[station1Id-1].memberTrips = 0;
+        }
+        if (!bikesh->rankingStation[station1Id-1].used){
+            bikesh->rankingStation[station1Id-1].used = 1;
+            bikesh->rankingStation[station1Id-1].memberTrips = 0;
+        }
+
+        bikesh->rankingStation[station1Id-1].memberTrips++;
 
     }
+
+}
+
+
+
+
+bikeSharingADT addData(bikeSharingADT bikesh, char * startDate, size_t station1Id, char * endDate, size_t station2Id, size_t isMember, char * rideableType){
+
+    
+
+
+
 }

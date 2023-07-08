@@ -11,6 +11,7 @@ int main( int argc, char * argv[] ){
     }
 
     bikeSharingADT bikeSh = readAddCsv(argv[1]);
+    bikeSharingADT
 
 }
 
@@ -54,14 +55,20 @@ bikeSharingADT readAddCsv(const char * filename){
         station2Id = atoi(strtok(NULL, ";"));
         isMember = atoi(strtok(NULL, "\n"));
     } // LLEGAMOS HASTA ACA
-
     
+    
+    
+}
+
+void query1(station){
+
+
 
 }
 
 //QUERY 1: INICIO DE VIAJES DE MIEMBROS POR ESTACION ORDENADOS DE MAYOR A MENOR
 
-//QUERY 2: CANTIDAD DE VIAJES DE A A B Y DE B A A, Y ASI SIGUE... (MATRIZ DE ADYACENCIA)
+//QUERY 2: CANTIDAD DE VIAJES DE A A B Y DE B A A, Y ASI SIGUE... (MATRIZ DE ADYACENCIA) LISTAR EN ORDEN ALFABETICO POR ORDEN DE LA ESTACION A
 
 //QUERY 3: CANTIDAD DE VIAJES POR MES DE CADA ESTACION, LISTAR ALFABETICAMENTE
 
