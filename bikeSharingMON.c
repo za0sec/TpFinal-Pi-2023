@@ -1,7 +1,16 @@
 #include <stdio.h>
 #include "bikeSharingADT.h"
+#include "lib/htmlTable.h"
+#include <string.h>
+#include <stdlib.h>
 
-#define CHUNK 20
+
+
+void query1(bikeSharingADT bikesh);
+
+bikeSharingADT readAddCsv(const char * filename);
+
+void readName(bikeSharingADT bikesh, const char * filename);
 
 int main( int argc, char * argv[] ){
 
@@ -10,9 +19,15 @@ int main( int argc, char * argv[] ){
         exit(ARERR);
     }
 
-    bikeSharingADT bikesh = readAddCsv(argv[1]);
-    bikesh = readName(bikesh, argv[2]);
 
+
+    bikeSharingADT bikesh = readAddCsv(argv[1]);
+    readName(bikesh, argv[2]);
+    tripSort(bikesh);
+
+    query1(bikesh);
+
+    return 0;
 }
 
 bikeSharingADT readAddCsv(const char * filename){
@@ -23,8 +38,8 @@ bikeSharingADT readAddCsv(const char * filename){
             exit(OPENERR);
         }
 
-    bikeSharingADT bikeSharing = newBikeSharing();
-    if( bikeSharing == NULL ){
+    bikeSharingADT bikesh = newBikeSharing();
+    if( bikesh == NULL ){
         fprintf(stderr, "Memory Error");
         exit(MEMERR);
     }
@@ -53,18 +68,19 @@ bikeSharingADT readAddCsv(const char * filename){
         station2Id = atoi(strtok(NULL, ";"));
         isMember = atoi(strtok(NULL, "\n"));
 
-        addStation(bikeSharing, station1Id, isMember); //SOLO QUERY 1
-        //a la par, creo un vector que este ordenado por trips (tripsort)
+        addStation(bikesh, station1Id, isMember); //SOLO QUERY 1
+
         //vamos a tener q poner otra funcion  para los otros queries
     }
-    
+   
+    return bikesh;
     
 }
 
-bikeSharingADT readName(bikeSharingADT bikesh, const char * filename){
+void readName(bikeSharingADT bikesh, const char * filename){
     FILE * file = fopen(filename, "rt");
         if(file == NULL){
-            fprintf(stderr, "Error opening file %s\n", filename);
+    fprintf(stderr, "Error opening file %s\n", filename);
             exit(OPENERR);
         }
     char readText[MAXCHAR];
@@ -74,6 +90,7 @@ bikeSharingADT readName(bikeSharingADT bikesh, const char * filename){
     size_t stationId;
     char * token;
     char * stationName;
+    int flag;
 
     while( fgets(readText, MAXCHAR, file) != NULL ){
         stationId = atoi(strtok(readText, ";"));
@@ -82,7 +99,7 @@ bikeSharingADT readName(bikeSharingADT bikesh, const char * filename){
             stationName = malloc((strlen(token)+1)); // * sizeof(char)
             if(stationName != NULL){
                 strcpy(stationName, token);
-            } else{
+    } else{
                 fprintf(stderr, "Memory Error");
                 exit(MEMERR);
             }
@@ -90,29 +107,48 @@ bikeSharingADT readName(bikeSharingADT bikesh, const char * filename){
             fprintf(stderr, "Null Token Error");
             exit(TOKERR);
         }
-        strtok(NULL, ";"); 
-        strtok(NULL, "\n"); //salteo las latitudes y longitudes
+        strtok(NULL, ";");//Salteo Latitud 
+        strtok(NULL, "\n"); //y longitud.
 
-        bikesh->rankingStations[stationId-1].stationName = malloc(strlen(stationName)+1);
-        if(bikesh->rankingStations[stationId-1].stationName != NULL){
-            strcpy(bikesh->rankingStations[stationId-1].stationName, stationName);
-        } else{
+        stringcpy(bikesh, stationName, stationId, &flag);
+        if (flag == MEMERR){    
             fprintf(stderr, "Memory Error");
             exit(MEMERR);
         } //copia en nuestro vector ordenado por stationIds, el nombre de la estación.
 
     }
-}
 
-void query1(station){
-
-//voy a tener que ordenar una copia del vector del ADT por orden alfabetico de las stations
-creamo el vector
-fx(vector, vector original , ....)
-te tiene que dejar todo en "vector"
 }
 
 //QUERY 1: INICIO DE VIAJES DE MIEMBROS POR ESTACION ORDENADOS DE MAYOR A MENOR
+void query1(bikeSharingADT bikesh){
+
+    tripSort(bikesh);
+
+    FILE * query1File = newFile("query1.csv");
+    if(query1File==NULL){
+        fprintf(stderr,"Error al crear archivo query1\n");
+        exit(CRERR);
+    }
+
+
+    fputs("Station;StartedTrips");
+    htmlTable table = newTable("Query1.html", 2, "Station", "StartedTrips");
+    
+
+    for(int i = 0; i < bikesh->realDim; i++) {
+        addHTMLRow(table, "%s", "%d", bikesh->trips->stationName, bikesh->trips->memberTrips);
+        bikesh->trips = bikesh->trips->tail;
+    }
+
+    closeHTMLTable(table); 
+
+
+//voy a tener que ordenar una copia del vector del ADT por orden alfabetico de las stations
+
+
+
+}
 
 //QUERY 2: CANTIDAD DE VIAJES DE A A B Y DE B A A, Y ASI SIGUE... (MATRIZ DE ADYACENCIA) LISTAR EN ORDEN ALFABETICO POR ORDEN DE LA ESTACION A
 

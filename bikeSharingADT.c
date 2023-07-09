@@ -1,30 +1,32 @@
 #include "bikeSharingADT.h"
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 typedef struct node * TList;
 
 typedef struct node{
-    char * startDate;
-    size_t station1Id; //id de la estación de inicio
-    char * endDate;
-    size_t station2Id; //id de la estacion de fin
-    size_t isMember; //0 si no es miembro, sino 1
-    char * rideableType; //suponiendo que usamos el mismo ADT para las 2 ciudades
+    size_t stationId;
+    size_t memberTrips;
+    char * stationName;
     struct node * tail;
 }TNode;
 
 typedef struct stationData{
     char * stationName; //TENEMOS QUE LEER EL OTRO ARCHIVO PARA CONSEGUIR EL NOMBRE DE LA ESTACION
     size_t memberTrips;
+    size_t stationId;
     size_t used;
     int vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
 }stationData;
 
 typedef struct bikeSharingCDT{
-    TList first; //quizas no lo vayamos a usar
+    TList trips; //Usada              CHECK
+    TList month;
     stationData * rankingStations;
-    size_t dim;
+    size_t dim; //Dimension de todas las stations sin usar y usadas.
+    size_t realDim; //Dimension solo de las stations usadas.
 }bikeSharingCDT;
 
 bikeSharingADT newBikeSharing(){
@@ -33,33 +35,58 @@ bikeSharingADT newBikeSharing(){
 
 void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
     if(isMember){
-        if (dim < station1Id){
-            bikesh->rankingStation = realloc(bikesh->rankingStation, station1Id * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
+        if (bikesh->dim < station1Id){
+            bikesh->rankingStations = realloc(bikesh->rankingStations, station1Id * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
         
-            for(int i=dim; i<station1Id-1; i++){ // Voy hasta station1Id-1 porque ya voy a asignarle used a esta parte
-                bikesh->rankingStation[i].used = 0;
+            for(int i=bikesh->dim; i<station1Id; i++){
+                bikesh->rankingStations[i].used = 0;
             }
             bikesh->dim = station1Id;
-
-            bikesh->rankingStation[station1Id-1].used = 1;
-            bikesh->rankingStation[station1Id-1].memberTrips = 0;
         }
-        if (!bikesh->rankingStation[station1Id-1].used){
-            bikesh->rankingStation[station1Id-1].used = 1;
-            bikesh->rankingStation[station1Id-1].memberTrips = 0;
+        if (!bikesh->rankingStations[station1Id-1].used){
+            bikesh->realDim++;
+            bikesh->rankingStations[station1Id-1].used = 1;
+            bikesh->rankingStations[station1Id-1].memberTrips = 0;
         }
 
-        bikesh->rankingStation[station1Id-1].memberTrips++;
+
+        bikesh->rankingStations[station1Id-1].memberTrips++;
 
     }
 
+
 } //al final de esta funcion, deberiamos tener todos los stationData ordenador por stationId en un vector
 
-void TripSort(stationData * vec1, stationData * vecOriginal, ){
+
+
+//Funcion que ordena el vector previamente asignado con valores. Ordena en base a los viajes realizados de mayor a menor (de miembros)
+void tripSort(bikeSharingADT bikesh){
     
+    qsort(bikesh->rankingStations, bikesh->real);
+
+    rankingStations vec[bikesh->realDim];
+
+    int k=0;
+    for (int i=0; i<bikesh->dim; i++){
+        if (bikesh->rankingStations[i].used){
+
+            vec[k].stationName = malloc(strlen(bikesh->)+1);
+            
+
+        }
+
+    }
+
 }
 
-
-bikeSharingADT addData(bikeSharingADT bikesh, char * startDate, size_t station1Id, size_t station2Id, size_t isMember){
+void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag){
+    
+    bikesh->rankingStations[stationId-1].stationName = malloc(strlen(from)+1);
+    if (bikesh->rankingStations[stationId-1].stationName == NULL){
+        (*flag) = MEMERR;
+        return;
+    }
+    
+   strcpy(bikesh->rankingStations[stationId-1].stationName, from); 
 
 }
