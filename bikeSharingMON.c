@@ -136,9 +136,8 @@ void query1(bikeSharingADT bikesh){
     htmlTable table = newTable("Query1.html", 2, "Station", "StartedTrips");
     
 
-    for(int i = 0; i < bikesh->realDim; i++) {
-        addHTMLRow(table, "%s", "%d", bikesh->trips->stationName, bikesh->trips->memberTrips);
-        bikesh->trips = bikesh->trips->tail;
+    for(int i = 0; i < getRealDim(bikesh); i++) {
+        addHTMLRow(table, "%s", "%d", getStationName(bikesh, i), getMemberTrips(bikesh, i));
     }
 
     closeHTMLTable(table); 

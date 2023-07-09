@@ -59,24 +59,40 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
 
 
 
+static char * copyStr(const char * s){
+    return strcpy(malloc(strlen(s)+1), s);
+}
+
 //Funcion que ordena el vector previamente asignado con valores. Ordena en base a los viajes realizados de mayor a menor (de miembros)
 void tripSort(bikeSharingADT bikesh){
-    
-    qsort(bikesh->rankingStations, bikesh->real);
-
-    rankingStations vec[bikesh->realDim];
 
     int k=0;
     for (int i=0; i<bikesh->dim; i++){
         if (bikesh->rankingStations[i].used){
 
-            vec[k].stationName = malloc(strlen(bikesh->)+1);
+            bikesh->rankingStations[k].stationName = copyStr(bikesh->rankingStations[i].stationName);
+            bikesh->rankingStations[k].memberTrips = bikesh->rankingStations[i].memberTrips;
+            bikesh->rankingStations[k++].stationId = i+1;
             
-
         }
-
     }
+    
+    bikesh->rankingStations = realloc(bikesh->rankingStations, k * sizeof(stationData));
+    
+    qsort(bikesh->rankingStations, bikesh->realDim, sizeof(stationData), compare);
 
+}
+
+size_t getRealDim(bikeSharingADT bikesh){
+    return bikesh->realDim;
+}
+
+size_t getMemberTrips(bikeSharingADT bikesh, int pos){
+    return bikesh->rankingStations[pos-1].memberTrips;
+}
+
+char * getStationName(bikeSharingADT bikesh, int pos){
+    return copyStr(bikesh->rankingStations[pos-1].stationName);
 }
 
 void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag){
