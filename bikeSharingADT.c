@@ -4,15 +4,6 @@
 #include <string.h>
 
 
-typedef struct node * TList;
-
-typedef struct node{
-    size_t stationId;
-    size_t memberTrips;
-    char * stationName;
-    struct node * tail;
-}TNode;
-
 typedef struct stationData{
     char * stationName; //TENEMOS QUE LEER EL OTRO ARCHIVO PARA CONSEGUIR EL NOMBRE DE LA ESTACION
     size_t memberTrips;
@@ -22,12 +13,28 @@ typedef struct stationData{
 }stationData;
 
 typedef struct bikeSharingCDT{
-    TList trips; //Usada              CHECK
-    TList month;
     stationData * rankingStations;
     size_t dim; //Dimension de todas las stations sin usar y usadas.
     size_t realDim; //Dimension solo de las stations usadas.
 }bikeSharingCDT;
+
+
+//Funcion compare para tener un criterio de comparacion.
+int compare(const void *a, const void *b){
+    stationData *station1 = (stationData *)a;
+    stationData *station2 = (stationData *)b;
+    
+    //Me fijo si el primero tiene menor cantidad de viajes o si tienen igual cantidad y son distintos lexicograficamente.
+    if (station1->memberTrips < station2->memberTrips || (station1->memberTrips == station2->memberTrips && strcmp(station1->stationName, station2->stationName) > 0)){
+        return 1;
+    } else if (station1->memberTrips > station2->memberTrips || (station1->memberTrips == station2->memberTrips && strcmp(station1->stationName, station2->stationName) < 0)){
+        return -1;
+    }
+
+    return 0;
+}
+
+
 
 bikeSharingADT newBikeSharing(){
     return calloc(1, sizeof(bikeSharingCDT));
@@ -104,5 +111,21 @@ void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag)
     }
     
    strcpy(bikesh->rankingStations[stationId-1].stationName, from); 
+
+}
+
+void freeADT(bikeSharingADT bikesh){
+
+    if (bikesh != NULL) {
+        if (bikesh->rankingStations != NULL) {
+            for (int i = 0; i < bikesh->dim; i++) {
+                if (bikesh->rankingStations[i].stationName != NULL) {
+                    free(bikesh->rankingStations[i].stationName);
+                }
+            }
+            free(bikesh->rankingStations);
+        }
+        free(bikesh);
+    }
 
 }

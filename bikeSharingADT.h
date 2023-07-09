@@ -6,16 +6,6 @@
 #define TOTAL_MONTHS 12
 #define CHUNK 20
 
-//Funcion compare para tener un criterio de comparacion.
-int compare(stationData station1, stationData station2){
-    //Me fijo si el primero tiene menor cantidad de viajes o si tienen igual cantidad y son distintos lexicograficamente.
-    if (station1->memberTrips < station2.memberTrips || (station1->memberTrips == station2.memberTrips && strcmp(station1->stationName, station2.stationName) > 0)){
-        return 1;
-    }
-
-    return 0;
-
-}
 typedef struct bikeSharingCDT * bikeSharingADT;
 
 // Crea un ADT
@@ -38,7 +28,7 @@ char * getStationName(bikeSharingADT bikesh, int pos);
 //Copia un string 
 void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag);
     
-
+void freeADT(bikeSharingADT bikesh);
 
 
 

@@ -12,6 +12,8 @@ bikeSharingADT readAddCsv(const char * filename);
 
 void readName(bikeSharingADT bikesh, const char * filename);
 
+FILE * newFile(const char * filename);
+
 int main( int argc, char * argv[] ){
 
     if (argc != 3){
@@ -26,6 +28,8 @@ int main( int argc, char * argv[] ){
     tripSort(bikesh);
 
     query1(bikesh);
+
+    freeADT(bikesh);
 
     return 0;
 }
@@ -72,6 +76,8 @@ bikeSharingADT readAddCsv(const char * filename){
 
         //vamos a tener q poner otra funcion  para los otros queries
     }
+
+    fclose(file);
    
     return bikesh;
     
@@ -118,6 +124,8 @@ void readName(bikeSharingADT bikesh, const char * filename){
 
     }
 
+    fclose(file);
+
 }
 
 //QUERY 1: INICIO DE VIAJES DE MIEMBROS POR ESTACION ORDENADOS DE MAYOR A MENOR
@@ -132,7 +140,7 @@ void query1(bikeSharingADT bikesh){
     }
 
 
-    fputs("Station;StartedTrips");
+    fputs("Station;StartedTrips\n",query1File);
     htmlTable table = newTable("Query1.html", 2, "Station", "StartedTrips");
     
 
@@ -145,9 +153,13 @@ void query1(bikeSharingADT bikesh){
 
 //voy a tener que ordenar una copia del vector del ADT por orden alfabetico de las stations
 
-
-
 }
+
+FILE * newFile(const char * filename){
+    FILE * new = fopen(filename, "wt");
+    return new;
+}
+
 
 //QUERY 2: CANTIDAD DE VIAJES DE A A B Y DE B A A, Y ASI SIGUE... (MATRIZ DE ADYACENCIA) LISTAR EN ORDEN ALFABETICO POR ORDEN DE LA ESTACION A
 
