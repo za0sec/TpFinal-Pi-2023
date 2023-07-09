@@ -1,5 +1,7 @@
 #include "bikeSharingADT.h"
 
+
+
 typedef struct node * TList;
 
 typedef struct node{
@@ -16,10 +18,11 @@ typedef struct stationData{
     char * stationName; //TENEMOS QUE LEER EL OTRO ARCHIVO PARA CONSEGUIR EL NOMBRE DE LA ESTACION
     size_t memberTrips;
     size_t used;
+    int vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
 }stationData;
 
 typedef struct bikeSharingCDT{
-    TList first;
+    TList first; //quizas no lo vayamos a usar
     stationData * rankingStations;
     size_t dim;
 }bikeSharingCDT;
@@ -50,15 +53,13 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
 
     }
 
+} //al final de esta funcion, deberiamos tener todos los stationData ordenador por stationId en un vector
+
+void TripSort(stationData * vec1, stationData * vecOriginal, ){
+    
 }
 
 
-
-
-bikeSharingADT addData(bikeSharingADT bikesh, char * startDate, size_t station1Id, char * endDate, size_t station2Id, size_t isMember, char * rideableType){
-
-    
-
-
+bikeSharingADT addData(bikeSharingADT bikesh, char * startDate, size_t station1Id, size_t station2Id, size_t isMember){
 
 }
