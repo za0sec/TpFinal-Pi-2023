@@ -46,7 +46,7 @@ bikeSharingADT newBikeSharing(void){
 
 
 void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
-    if (bikesh->dim < station1Id){//Hay que ver si va <=
+    if (bikesh->dim < station1Id){
         bikesh->rankingStations = realloc(bikesh->rankingStations, station1Id * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
     
         for(int i=bikesh->dim; i<station1Id; i++){
@@ -125,7 +125,7 @@ void freeADT(bikeSharingADT bikesh){
 
     if (bikesh != NULL) {
         if (bikesh->rankingStations != NULL) {
-            for (int i = 0; i < bikesh->realDim; i++) {
+            for (int i = 0; i < bikesh->dim-1; i++) {
                 if (bikesh->rankingStations[i].stationName != NULL) {
                     free(bikesh->rankingStations[i].stationName);
                 }
