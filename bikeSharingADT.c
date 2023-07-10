@@ -80,10 +80,8 @@ static char * copyStr(const char * s){
 void tripSort(bikeSharingADT bikesh){
 
     int k=0;
-    printf("%d", bikesh->dim);
     for (size_t i=0; i<bikesh->dim; i++){
-        printf("%ld\t", bikesh->dim);
-        printf("%ld\t%ld\n", bikesh->rankingStations[i].used, i);
+
         if (bikesh->rankingStations[i].used){
 
             bikesh->rankingStations[k].stationName = copyStr(bikesh->rankingStations[i].stationName);
@@ -131,6 +129,7 @@ void freeADT(bikeSharingADT bikesh){
                 if (bikesh->rankingStations[i].stationName != NULL) {
                     free(bikesh->rankingStations[i].stationName);
                 }
+                free(bikesh->rankingStations[i]);
             }
             free(bikesh->rankingStations);
         }
