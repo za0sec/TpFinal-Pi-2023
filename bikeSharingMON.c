@@ -21,7 +21,6 @@ int main( int argc, char * argv[] ){
 
     bikeSharingADT bikesh = readAddCsv(argv[1]);
     readName(bikesh, argv[2]);
-    tripSort(bikesh);
 
     query1(bikesh);
 
