@@ -40,7 +40,7 @@ bikeSharingADT readAddCsv(const char * filename){
         if(file == NULL){
             fprintf(stderr, "Error opening file %s\n", filename);
             exit(OPENERR);
-        }
+     }
 
     bikeSharingADT bikesh = newBikeSharing();
     if( bikesh == NULL ){
@@ -66,7 +66,7 @@ bikeSharingADT readAddCsv(const char * filename){
     size_t isMember;
 
     while( fgets(readText, MAXCHAR, file) != NULL ){
-        startDate = strtok(readText, ";");
+        startDate = stringCpystrtok(readText, ";");
         station1Id = atoi(strtok(NULL, ";"));
         strtok(NULL, ";");
         station2Id = atoi(strtok(NULL, ";"));
@@ -96,7 +96,7 @@ void readName(bikeSharingADT bikesh, const char * filename){
     size_t stationId;
     char * token;
     char * stationName;
-    int flag;
+    int flag = 0;
 
     while( fgets(readText, MAXCHAR, file) != NULL ){
         stationId = atoi(strtok(readText, ";"));
@@ -121,6 +121,8 @@ void readName(bikeSharingADT bikesh, const char * filename){
             fprintf(stderr, "Memory Error");
             exit(MEMERR);
         } //copia en nuestro vector ordenado por stationIds, el nombre de la estación.
+
+        free(stationName);
 
     }
 
@@ -147,6 +149,8 @@ void query1(bikeSharingADT bikesh){
     for(int i = 0; i < getRealDim(bikesh); i++) {
         addHTMLRow(table, "%s", "%d", getStationName(bikesh, i), getMemberTrips(bikesh, i));
     }
+
+    fclose(query1File);
 
     closeHTMLTable(table); 
 
