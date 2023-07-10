@@ -125,11 +125,10 @@ void freeADT(bikeSharingADT bikesh){
 
     if (bikesh != NULL) {
         if (bikesh->rankingStations != NULL) {
-            for (int i = 0; i < bikesh->dim; i++) {
+            for (int i = 0; i < bikesh->realDim; i++) {
                 if (bikesh->rankingStations[i].stationName != NULL) {
                     free(bikesh->rankingStations[i].stationName);
                 }
-                free(bikesh->rankingStations[i]);
             }
             free(bikesh->rankingStations);
         }
