@@ -46,30 +46,25 @@ bikeSharingADT newBikeSharing(void){
 
 
 void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
-    if(isMember){
-        if (bikesh->dim < station1Id){//Hay que ver si va <=
-            bikesh->rankingStations = realloc(bikesh->rankingStations, station1Id * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
-        
-            for(int i=bikesh->dim; i<station1Id; i++){
-                bikesh->rankingStations[i].memberTrips = 0;
-                bikesh->rankingStations[i].stationName = NULL;
-                bikesh->rankingStations[i].stationId = 0;
-                bikesh->rankingStations[i].used = 0;
-            }
-            bikesh->dim = station1Id;
-        }
-        if (!bikesh->rankingStations[station1Id-1].used){
-            bikesh->realDim++;
-            bikesh->rankingStations[station1Id-1].used = 1;
-            bikesh->rankingStations[station1Id-1].memberTrips = 0;
-        }
-
+    if (bikesh->dim < station1Id){//Hay que ver si va <=
+        bikesh->rankingStations = realloc(bikesh->rankingStations, station1Id * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
     
-        bikesh->rankingStations[station1Id-1].memberTrips++;
-
+        for(int i=bikesh->dim; i<station1Id; i++){
+            bikesh->rankingStations[i].memberTrips = 0;
+            bikesh->rankingStations[i].stationName = NULL;
+            bikesh->rankingStations[i].stationId = 0;
+            bikesh->rankingStations[i].used = 0;
+        }
+        bikesh->dim = station1Id;
     }
-
-
+    if (!bikesh->rankingStations[station1Id-1].used){
+        bikesh->realDim++;
+        bikesh->rankingStations[station1Id-1].used = 1;
+        bikesh->rankingStations[station1Id-1].memberTrips = 0;
+    }
+    if(isMember)
+        bikesh->rankingStations[station1Id-1].memberTrips++;
+    
 } //al final de esta funcion, deberiamos tener todos los stationData ordenador por stationId en un vector
 
 
