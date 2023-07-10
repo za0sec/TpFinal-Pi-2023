@@ -1,0 +1,4 @@
+ bikesh->rankingStations = realloc(bikesh->rankingStations, (station1Id+39) * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
+
+bikesh->rankingStations[k++].stationId = i+1;
+
