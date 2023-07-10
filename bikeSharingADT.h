@@ -6,6 +6,8 @@
 #define TOTAL_MONTHS 12
 #define CHUNK 20
 
+#define SWAP(a,b) ()
+
 typedef struct bikeSharingCDT * bikeSharingADT;
 
 // Crea un ADT

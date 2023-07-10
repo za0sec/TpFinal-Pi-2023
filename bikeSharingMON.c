@@ -40,7 +40,7 @@ bikeSharingADT readAddCsv(const char * filename){
         if(file == NULL){
             fprintf(stderr, "Error opening file %s\n", filename);
             exit(OPENERR);
-     }
+        }
 
     bikeSharingADT bikesh = newBikeSharing();
     if( bikesh == NULL ){
@@ -66,7 +66,7 @@ bikeSharingADT readAddCsv(const char * filename){
     size_t isMember;
 
     while( fgets(readText, MAXCHAR, file) != NULL ){
-        startDate = stringCpystrtok(readText, ";");
+        startDate = strtok(readText, ";");
         station1Id = atoi(strtok(NULL, ";"));
         strtok(NULL, ";");
         station2Id = atoi(strtok(NULL, ";"));
@@ -143,11 +143,15 @@ void query1(bikeSharingADT bikesh){
 
 
     fputs("Station;StartedTrips\n",query1File);
+
     htmlTable table = newTable("Query1.html", 2, "Station", "StartedTrips");
-    
+
+    char aux[10];
 
     for(int i = 0; i < getRealDim(bikesh); i++) {
-        addHTMLRow(table, "%s", "%d", getStationName(bikesh, i), getMemberTrips(bikesh, i));
+        sprintf(aux, "%ld", getMemberTrips(bikesh, i));
+        fprintf(query1File, "%s;%s\n", getStationName(bikesh, i), aux);
+        addHTMLRow(table, getStationName(bikesh, i), aux);
     }
 
     fclose(query1File);

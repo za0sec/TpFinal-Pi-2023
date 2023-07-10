@@ -23,15 +23,20 @@ typedef struct bikeSharingCDT{
 int compare(const void *a, const void *b){
     stationData *station1 = (stationData *)a;
     stationData *station2 = (stationData *)b;
-    
+
+    int cmp = 0;
+
     //Me fijo si el primero tiene menor cantidad de viajes o si tienen igual cantidad y son distintos lexicograficamente.
-    if (station1->memberTrips < station2->memberTrips || (station1->memberTrips == station2->memberTrips && strcmp(station1->stationName, station2->stationName) > 0)){
-        return 1;
-    } else if (station1->memberTrips > station2->memberTrips || (station1->memberTrips == station2->memberTrips && strcmp(station1->stationName, station2->stationName) < 0)){
-        return -1;
+    if (station1->memberTrips < station2->memberTrips){
+        cmp = 1;
+    } else if (station1->memberTrips > station2->memberTrips){
+        cmp = -1;
     }
 
-    return 0;
+    if (!cmp)
+        cmp = strcmp(station1->stationName, station2->stationName);
+    
+    return cmp;
 }
 
 
@@ -95,11 +100,11 @@ size_t getRealDim(bikeSharingADT bikesh){
 }
 
 size_t getMemberTrips(bikeSharingADT bikesh, int pos){
-    return bikesh->rankingStations[pos-1].memberTrips;
+    return bikesh->rankingStations[pos].memberTrips;
 }
 
 char * getStationName(bikeSharingADT bikesh, int pos){
-    return copyStr(bikesh->rankingStations[pos-1].stationName);
+    return copyStr(bikesh->rankingStations[pos].stationName);
 }
 
 void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag){
