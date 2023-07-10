@@ -47,8 +47,8 @@ bikeSharingADT newBikeSharing(void){
 
 void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
     if(isMember){
-        if (bikesh->dim <= station1Id){
-            bikesh->rankingStations = realloc(bikesh->rankingStations, (station1Id) * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
+        if (bikesh->dim < station1Id){//Hay que ver si va <=
+            bikesh->rankingStations = realloc(bikesh->rankingStations, station1Id * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
         
             for(int i=bikesh->dim; i<station1Id; i++){
                 bikesh->rankingStations[i].memberTrips = 0;
@@ -75,7 +75,10 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
 
 
 static char * copyStr(const char * s){
-    return strcpy(malloc(strlen(s)+1), s);
+    char * aux = NULL;
+    aux = realloc(aux, (strlen(s)+1) * sizeof(char));
+    strcpy(aux, s);
+    return aux;
 }
 
 //Funcion que ordena el vector previamente asignado con valores. Ordena en base a los viajes realizados de mayor a menor (de miembros)
@@ -83,7 +86,7 @@ void tripSort(bikeSharingADT bikesh){
 
     int k=0;
     for (size_t i=0; i<bikesh->dim; i++){
-        printf("%ld", bikesh->dim);
+        printf("%ld\t", bikesh->dim);
         printf("%ld\t%ld\n", bikesh->rankingStations[i].used, i);
         if (bikesh->rankingStations[i].used){
 
@@ -94,7 +97,7 @@ void tripSort(bikeSharingADT bikesh){
         }
     }
     
-    bikesh->rankingStations = realloc(bikesh->rankingStations, bikesh->realDim * sizeof(stationData));
+    bikesh->rankingStations = realloc(bikesh->rankingStations, k * sizeof(stationData));
     
     qsort(bikesh->rankingStations, bikesh->realDim, sizeof(stationData), compare);
 
@@ -114,7 +117,7 @@ char * getStationName(bikeSharingADT bikesh, int pos){
 
 void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag){
  
-    bikesh->rankingStations[stationId-1].stationName = malloc(strlen(from)+1);
+    bikesh->rankingStations[stationId-1].stationName = realloc(bikesh->rankingStations[stationId-1].stationName, (strlen(from)+1) * sizeof(char));
     if (bikesh->rankingStations[stationId-1].stationName == NULL){
         (*flag) = MEMERR;
         return;
@@ -123,15 +126,6 @@ void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag)
 
     
 }
-void cpyStationName(bikeSharingADT bikesh, size_t stationId, char * from){
-
-    bikesh->rankingStations[stationId-1].stationName = malloc(strlen(from)+1);
-
-    strcpy(bikesh->rankingStations[stationId-1].stationName, from); 
-
-}
-
-
 
 void freeADT(bikeSharingADT bikesh){
 

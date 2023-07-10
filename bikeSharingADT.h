@@ -25,8 +25,6 @@ size_t getMemberTrips(bikeSharingADT bikesh, int pos);
 
 char * getStationName(bikeSharingADT bikesh, int pos);
 
-void cpyStationName(bikeSharingADT bikesh, size_t stationId, char * from);
-
 //Copia un string 
 void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag);
     

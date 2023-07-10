@@ -4,8 +4,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-
-
 void query1(bikeSharingADT bikesh);
 
 bikeSharingADT readAddCsv(const char * filename);
@@ -20,8 +18,6 @@ int main( int argc, char * argv[] ){
         fprintf(stderr, "Arguments should be 2");
         exit(ARERR);
     }
-
-
 
     bikeSharingADT bikesh = readAddCsv(argv[1]);
     readName(bikesh, argv[2]);
@@ -58,11 +54,8 @@ bikeSharingADT readAddCsv(const char * filename){
     // 2022-09-02 11:19:47;753;2022-09-02 11:22:23;702;0
 
     char * startDate;
-    
     size_t station1Id;
-    
     size_t station2Id;
-    
     size_t isMember;
 
     while( fgets(readText, MAXCHAR, file) != NULL ){
@@ -111,6 +104,8 @@ void readName(bikeSharingADT bikesh, const char * filename){
     char * token;
     char * stationName;
     int flag = 0;
+
+// EL ERROR ESTA EN ESTA FUNCION AL TRATAR DE LEER ARCHIVOS Y ACCEDE A MEMORIA NO DEFINIDA!!!!!!!!!
 
     while( fgets(readText, MAXCHAR, file) != NULL ){
         stationId = atoi(strtok(readText, ";"));
