@@ -80,6 +80,7 @@ static char * copyStr(const char * s){
 void tripSort(bikeSharingADT bikesh){
 
     int k=0;
+    printf("%d", bikesh->dim);
     for (size_t i=0; i<bikesh->dim; i++){
         printf("%ld\t", bikesh->dim);
         printf("%ld\t%ld\n", bikesh->rankingStations[i].used, i);
