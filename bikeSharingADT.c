@@ -5,15 +5,15 @@
 
 
 typedef struct stationData{
-    char * stationName; //TENEMOS QUE LEER EL OTRO ARCHIVO PARA CONSEGUIR EL NOMBRE DE LA ESTACION
+    char * stationName;
     size_t memberTrips;
-    size_t stationId;
+    size_t stationId; // No es necesario por el momento
     size_t used;
-    int vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
+    //int vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
 }stationData;
 
 typedef struct bikeSharingCDT{
-    stationData * rankingStations;
+    stationData rankingStations[5000];
     size_t dim; //Dimension de todas las stations sin usar y usadas.
     size_t realDim; //Dimension solo de las stations usadas.
 }bikeSharingCDT;
@@ -34,23 +34,26 @@ int compare(const void *a, const void *b){
     }
 
     if (!cmp)
-        cmp = strcmp(station1->stationName, station2->stationName);
+        cmp = strcasecmp(station1->stationName, station2->stationName);
     
     return cmp;
 }
 
-
-
-bikeSharingADT newBikeSharing(){
+bikeSharingADT newBikeSharing(void){
     return calloc(1, sizeof(bikeSharingCDT));
 }
 
+
+
 void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
     if(isMember){
-        if (bikesh->dim < station1Id){
-            bikesh->rankingStations = realloc(bikesh->rankingStations, station1Id * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
+        if (bikesh->dim <= station1Id){
+            //bikesh->rankingStations = realloc(bikesh->rankingStations, station1Id * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
         
             for(int i=bikesh->dim; i<station1Id; i++){
+                bikesh->rankingStations[i].memberTrips = 0;
+                bikesh->rankingStations[i].stationName = NULL;
+                bikesh->rankingStations[i].stationId = 0;
                 bikesh->rankingStations[i].used = 0;
             }
             bikesh->dim = station1Id;
@@ -61,7 +64,7 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
             bikesh->rankingStations[station1Id-1].memberTrips = 0;
         }
 
-
+    
         bikesh->rankingStations[station1Id-1].memberTrips++;
 
     }
@@ -89,7 +92,7 @@ void tripSort(bikeSharingADT bikesh){
         }
     }
     
-    bikesh->rankingStations = realloc(bikesh->rankingStations, k * sizeof(stationData));
+    //bikesh->rankingStations = realloc(bikesh->rankingStations, k * sizeof(stationData));
     
     qsort(bikesh->rankingStations, bikesh->realDim, sizeof(stationData), compare);
 
@@ -108,15 +111,15 @@ char * getStationName(bikeSharingADT bikesh, int pos){
 }
 
 void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag){
-    
+ 
     bikesh->rankingStations[stationId-1].stationName = malloc(strlen(from)+1);
     if (bikesh->rankingStations[stationId-1].stationName == NULL){
         (*flag) = MEMERR;
         return;
     }
-    
-   strcpy(bikesh->rankingStations[stationId-1].stationName, from); 
+    strcpy(bikesh->rankingStations[stationId-1].stationName, from); 
 
+    
 }
 
 void freeADT(bikeSharingADT bikesh){
@@ -128,7 +131,7 @@ void freeADT(bikeSharingADT bikesh){
                     free(bikesh->rankingStations[i].stationName);
                 }
             }
-            free(bikesh->rankingStations);
+            //free(bikesh->rankingStations);
         }
         free(bikesh);
     }

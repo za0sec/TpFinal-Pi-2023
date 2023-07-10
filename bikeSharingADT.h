@@ -1,6 +1,5 @@
 #ifndef __bikeSharingADT_h
 #define __bikeSharingADT_h
-
 #include <stdio.h>
 #define MAXCHAR 150
 #define TOTAL_MONTHS 12
@@ -11,7 +10,7 @@
 typedef struct bikeSharingCDT * bikeSharingADT;
 
 // Crea un ADT
-bikeSharingADT newBikeSharing();
+bikeSharingADT newBikeSharing(void);
 
 // Agrega un nodo a la lista
 void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember);

@@ -25,9 +25,9 @@ int main( int argc, char * argv[] ){
 
     bikeSharingADT bikesh = readAddCsv(argv[1]);
     readName(bikesh, argv[2]);
-    //tripSort(bikesh);
+    tripSort(bikesh);
 
-    //query1(bikesh);
+    query1(bikesh);
 
     freeADT(bikesh);
 
@@ -69,7 +69,7 @@ bikeSharingADT readAddCsv(const char * filename){
         startDate = strtok(readText, ";");
         station1Id = atoi(strtok(NULL, ";"));
         strtok(NULL, ";");
-        station2Id = atoi(strtok(NULL, ";")); 
+        station2Id = atoi(strtok(NULL, ";"));
         isMember = atoi(strtok(NULL, "\n"));
 
         addStation(bikesh, station1Id, isMember); //SOLO QUERY 1
@@ -105,7 +105,6 @@ void readName(bikeSharingADT bikesh, const char * filename){
             stationName = malloc((strlen(token)+1)); // * sizeof(char)
             if(stationName != NULL){
                 strcpy(stationName, token);
-                stringcpy(bikesh, stationName, stationId, &flag);
             }else{
                 fprintf(stderr, "Memory Error");
                 exit(MEMERR);
@@ -116,6 +115,8 @@ void readName(bikeSharingADT bikesh, const char * filename){
         }
         strtok(NULL, ";");//Salteo Latitud 
         strtok(NULL, "\n"); //y longitud.
+        
+        stringcpy(bikesh, stationName, stationId, &flag);
         if (flag == MEMERR){    
             fprintf(stderr, "Memory Error");
             exit(MEMERR);
