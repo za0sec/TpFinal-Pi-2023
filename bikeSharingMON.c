@@ -78,10 +78,11 @@ bikeSharingADT readAddCsv(const char * filename){
 
         addStation(bikesh, station1Id, isMember); //SOLO QUERY 1
 
+        free(startDate);
+
         //vamos a tener q poner otra funcion  para los otros queries
     }
 
-    free(startDate);
 
     fclose(file);
    
@@ -156,10 +157,13 @@ void query1(bikeSharingADT bikesh){
 
     char aux[10];
 
+    
     for(int i = 0; i < getRealDim(bikesh); i++) {
         sprintf(aux, "%ld", getMemberTrips(bikesh, i));
-        fprintf(query1File, "%s;%s\n", getStationName(bikesh, i), aux);
-        addHTMLRow(table, getStationName(bikesh, i), aux);
+        char * stationName = getStationName(bikesh, i);
+        fprintf(query1File, "%s;%s\n", stationName, aux);
+        addHTMLRow(table, stationName, aux);
+        free(stationName); // libera la memoria
     }
 
     fclose(query1File);

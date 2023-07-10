@@ -34,7 +34,7 @@ int compare(const void *a, const void *b){
     }
 
     if (!cmp)
-        cmp = strcmp(station1->stationName, station2->stationName);
+        cmp = strcasecmp(station1->stationName, station2->stationName);
     
     return cmp;
 }
@@ -42,8 +42,6 @@ int compare(const void *a, const void *b){
 bikeSharingADT newBikeSharing(void){
     return calloc(1, sizeof(bikeSharingCDT));
 }
-
-
 
 void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
     if (bikesh->dim < station1Id){
@@ -70,11 +68,13 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
 
 
 static char * copyStr(const char * s){
-    char * aux = NULL;
-    aux = realloc(aux, (strlen(s)+1) * sizeof(char));
-    strcpy(aux, s);
-    return aux;
+    char * copy = malloc(strlen(s) + 1);
+    if(copy == NULL) {
+        return NULL; // or handle the error appropriately
+    }
+    return strcpy(copy, s);
 }
+
 
 //Funcion que ordena el vector previamente asignado con valores. Ordena en base a los viajes realizados de mayor a menor (de miembros)
 void tripSort(bikeSharingADT bikesh){
@@ -83,18 +83,21 @@ void tripSort(bikeSharingADT bikesh){
     for (size_t i=0; i<bikesh->dim; i++){
 
         if (bikesh->rankingStations[i].used){
-
+            free(bikesh->rankingStations[k].stationName);  // liberar la cadena original
             bikesh->rankingStations[k].stationName = copyStr(bikesh->rankingStations[i].stationName);
             bikesh->rankingStations[k].memberTrips = bikesh->rankingStations[i].memberTrips;
             bikesh->rankingStations[k++].stationId = i+1;
-            
-        }
+        }    
     }
     
-    bikesh->rankingStations = realloc(bikesh->rankingStations, k * sizeof(stationData));
+    bikesh->rankingStations = realloc(bikesh->rankingStations, k * sizeof(stationData)); //Con este realloc eliminamos del vector todas las estaciones que tengan el used en 0.
     
     qsort(bikesh->rankingStations, bikesh->realDim, sizeof(stationData), compare);
 
+}
+
+size_t getDim(bikeSharingADT bikesh){
+    return bikesh->dim;
 }
 
 size_t getRealDim(bikeSharingADT bikesh){
@@ -118,14 +121,13 @@ void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag)
     }
     strcpy(bikesh->rankingStations[stationId-1].stationName, from); 
 
-    
 }
 
 void freeADT(bikeSharingADT bikesh){
 
     if (bikesh != NULL) {
         if (bikesh->rankingStations != NULL) {
-            for (int i = 0; i < bikesh->dim-1; i++) {
+            for (int i = 0; i < bikesh->realDim; i++) {
                 if (bikesh->rankingStations[i].stationName != NULL) {
                     free(bikesh->rankingStations[i].stationName);
                 }

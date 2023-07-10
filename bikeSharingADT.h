@@ -21,6 +21,8 @@ void tripSort(bikeSharingADT bikesh);
 
 size_t getRealDim(bikeSharingADT bikesh);
 
+size_t getDim(bikeSharingADT bikesh);
+
 size_t getMemberTrips(bikeSharingADT bikesh, int pos);
 
 char * getStationName(bikeSharingADT bikesh, int pos);
