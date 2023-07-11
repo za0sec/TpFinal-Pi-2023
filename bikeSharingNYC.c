@@ -48,7 +48,7 @@ bikeSharingADT readAddCsv(const char * filename){
 
     bikeSharingADT bikesh = newBikeSharing();
     if( bikesh == NULL ){
-        fprintf(stderr, "Memory Error\n");
+        fprintf(stderr, "51Memory Error\n");
         exit(MEMERR);
     }
 
@@ -57,9 +57,10 @@ bikeSharingADT readAddCsv(const char * filename){
     fscanf(file, "%s\n", readText); /* salta la primer linea */
 
     // example
-    // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
-    // 2021-09-20 06:31:28;348;2021-09-20 07:02:22;332;1
-    // 2022-09-02 11:19:47;753;2022-09-02 11:22:23;702;0
+    // started_at;start_station_id;ended_at;end_station_id;rideable_type;member_casual
+    // 2022-11-17 19:05:10.000000;489509;2022-11-17 19:07:30.000000;490309;classic_bike;member
+    // 2022-11-13 13:42:35.000000;702804;2022-11-13 14:24:49.000000;808505;classic_bike;casual
+
 
     char * startDate;
     size_t station1Id;
@@ -75,7 +76,7 @@ bikeSharingADT readAddCsv(const char * filename){
             if (startDate != NULL) {
                 strcpy(startDate, token);
             } else {
-                fprintf(stderr, "Memory Error\n");
+                fprintf(stderr, "78Memory Error\n");
                 exit(MEMERR);
             }
         } else {
@@ -84,12 +85,12 @@ bikeSharingADT readAddCsv(const char * filename){
         }
         
         station1Id = atoi(strtok(NULL, ";"));
-        strtok(NULL, ";");
+        strtok(NULL, ";"); // ended at
         station2Id = atoi(strtok(NULL, ";")); 
-        strtok(NULL, ";");
+        strtok(NULL, ";"); // rideable type
         isMember = strtok(NULL, "\n")[0] == 'm' ? 1 : 0; //Quiero solo el primer caracter. Si es una m quiere decir que es miembro y sino no.
 
-
+        addStationNYC(bikesh, station1Id, isMember, startDate, station2Id);
 
         free(startDate);
 
@@ -126,7 +127,7 @@ void readName(bikeSharingADT bikesh, const char * filename){
             if(stationName != NULL){
                 strcpy(stationName, token);
             }else{
-                fprintf(stderr, "Memory Error\n");
+                fprintf(stderr, "129Memory Error\n");
                 exit(MEMERR);
             }
         }else{
@@ -140,7 +141,7 @@ void readName(bikeSharingADT bikesh, const char * filename){
         bikesh = stringcpyNYC(bikesh, stationName, stationId);
         
         if (bikesh == NULL){ 
-            fprintf(stderr, "Memory Error\n");
+            fprintf(stderr, "143Memory Error\n");
             exit(MEMERR);
         } //copia en nuestro vector ordenado por stationIds, el nombre de la estación.
 

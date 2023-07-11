@@ -133,26 +133,6 @@ static char * copyStr(const char * s){
     return strcpy(copy, s);
 }
 
-//Funcion que ordena el vector previamente asignado con valores. Ordena en base a los viajes realizados de mayor a menor (de miembros)
-void tripSort(bikeSharingADT bikesh){
-
-    int k=0;
-    for (size_t i=0; i<bikesh->dim; i++){
-
-        if (bikesh->rankingStations[i].used){
-            free(bikesh->rankingStations[k].stationName);  // liberar la cadena original
-            bikesh->rankingStations[k].stationName = copyStr(bikesh->rankingStations[i].stationName);
-            bikesh->rankingStations[k].memberTrips = bikesh->rankingStations[i].memberTrips;
-            bikesh->rankingStations[k++].stationId = i+1;
-        }    
-    }
-    
-    bikesh->rankingStations = realloc(bikesh->rankingStations, k * sizeof(stationData)); //Con este realloc eliminamos del vector todas las estaciones que tengan el used en 0.
-    
-    qsort(bikesh->rankingStations, bikesh->realDim, sizeof(stationData), compare);
-
-}
-
 size_t getDim(bikeSharingADT bikesh){
     return bikesh->dim;
 }
@@ -280,6 +260,25 @@ bikeSharingADT newBikeSharing(void){
     return calloc(1, sizeof(bikeSharingCDT));
 }
 
+//Funcion que ordena el vector previamente asignado con valores. Ordena en base a los viajes realizados de mayor a menor (de miembros)
+void tripSort(bikeSharingADT bikesh){
+
+    int k=0;
+    for (size_t i=0; i<bikesh->dim; i++){
+
+        if (bikesh->rankingStations[i].used){
+            free(bikesh->rankingStations[k].stationName);  // liberar la cadena original
+            bikesh->rankingStations[k].stationName = copyStr(bikesh->rankingStations[i].stationName);
+            bikesh->rankingStations[k].memberTrips = bikesh->rankingStations[i].memberTrips;
+            bikesh->rankingStations[k++].stationId = i+1;
+        }    
+    }
+    
+    bikesh->rankingStations = realloc(bikesh->rankingStations, k * sizeof(stationData)); //Con este realloc eliminamos del vector todas las estaciones que tengan el used en 0.
+    
+    qsort(bikesh->rankingStations, bikesh->realDim, sizeof(stationData), compare);
+
+}
 
 /* -----------------------------------------------------------------------BikesharingNYC-------------------------------------------------------------------------------- */
 // static TList addDataRec(TList list, size_t station1Id, size_t isMember, char * startDate, size_t station2Id){
@@ -346,9 +345,12 @@ char * stationName;
     size_t roundTrips;
 
 void addStationNYC(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate, size_t station2Id){
-    if (!(bikesh->dim % CHUNK)){
-        bikesh->rankingStations = realloc(bikesh->rankingStations, (bikesh->dim+CHUNK) * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
-        for(int i=bikesh->dim; i<(bikesh->dim + CHUNK); i++){
+  
+    if (!(bikesh->realDim % CHUNK)){
+
+        bikesh->rankingStations = realloc(bikesh->rankingStations, ((bikesh->realDim)+CHUNK) * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
+      
+        for(int i=bikesh->realDim; i<(bikesh->realDim + CHUNK); i++){
             bikesh->rankingStations[i].memberTrips = 0;
             bikesh->rankingStations[i].stationName = NULL;
             bikesh->rankingStations[i].stationId = 0;
@@ -357,13 +359,14 @@ void addStationNYC(bikeSharingADT bikesh, size_t station1Id, size_t isMember, ch
             for(int j = 0; j < TOTAL_MONTHS; j++){
                 bikesh->rankingStations[i].vecMonths[j] = 0;
             }
-
         }
     }
-    bikesh->dim += 1;
-    bikesh->rankingStations[bikesh->dim - 1].stationId = station1Id;
-    bikesh->rankingStations[bikesh->dim - 1].used = 1;
-    for(int j = 0; j < bikesh->dim; j++){
+
+    bikesh->realDim++;
+    bikesh->dim = bikesh->realDim;
+    bikesh->rankingStations[bikesh->realDim - 1].stationId = station1Id;
+    bikesh->rankingStations[bikesh->realDim - 1].used = 1;
+    for(int j = 0; j < bikesh->realDim; j++){
         if(bikesh->rankingStations[j].stationId == station1Id){
             bikesh->rankingStations[j].memberTrips += isMember;
             // bikesh->rankingStations[j].roundTrips += (station1Id == station2Id)? 1 : 0; QUERY 4?
@@ -379,7 +382,7 @@ void addStationNYC(bikeSharingADT bikesh, size_t station1Id, size_t isMember, ch
 
 
 bikeSharingADT stringcpyNYC(bikeSharingADT bikesh, char * from, size_t stationId){
-    for(int i = 0; i < bikesh->dim; i++){
+    for(int i = 0; i < bikesh->realDim; i++){
         if(stationId == bikesh->rankingStations[i].stationId){
             bikesh->rankingStations[i].stationName = realloc(bikesh->rankingStations[i].stationName, (strlen(from)+1) * sizeof(char));
             if (bikesh->rankingStations[i].stationName == NULL){
@@ -389,5 +392,5 @@ bikeSharingADT stringcpyNYC(bikeSharingADT bikesh, char * from, size_t stationId
             return bikesh;
         }
     }
-    return NULL;
+    return bikesh;
 }
