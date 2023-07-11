@@ -166,6 +166,18 @@ void addMatrix(bikeSharingADT bikesh, size_t station1Id, size_t station2Id, size
 
 }
 
+// Ordena la matriz por orden alfabetico
+void sortAlpha(bikeSharingADT bikesh){
+
+    qsort(bikesh->rankingStations, bikesh->realDim, sizeof(stationData), strcasecmp);
+
+}
+
+// Devuelve los viajes de A a B
+size_t getTripsAB(bikeSharingADT bikesh, int i, int j){
+    return bikesh->mat[i][j];
+}
+
 void printmat(bikeSharingADT bikesh){
 
     for( int i = 0; i < bikesh->dimMat; i++ ){

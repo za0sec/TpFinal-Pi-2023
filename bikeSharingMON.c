@@ -24,8 +24,8 @@ int main( int argc, char * argv[] ){
     bikeSharingADT bikesh = readAddCsv(argv[1]);
     readName(bikesh, argv[2]);
 
-    query2(bikesh);
     query1(bikesh);
+    query2(bikesh);
 
     freeADT(bikesh);
 
@@ -153,20 +153,18 @@ void query1(bikeSharingADT bikesh){
 
     tripSort(bikesh);
 
-    FILE * query1File = newFile("query1.csv");
+    FILE * query1File = newFile("Query1.csv");
     if(query1File==NULL){
-        fprintf(stderr,"Error al crear archivo query1\n");
+        fprintf(stderr,"Error al crear archivo Query1\n");
         exit(CRERR);
     }
-
 
     fputs("Station;StartedTrips\n",query1File);
 
     htmlTable table = newTable("Query1.html", 2, "Station", "StartedTrips");
 
-    char aux[10];
+    char aux[STATION_ID];
 
-    
     for(int i = 0; i < getRealDim(bikesh); i++) {
         sprintf(aux, "%ld", getMemberTrips(bikesh, i));
         char * stationName = getStationName(bikesh, i);
@@ -186,7 +184,33 @@ void query1(bikeSharingADT bikesh){
 
 void query2(bikeSharingADT bikesh){
 
-    printmat(bikesh);
+    FILE * query2File = newFile("Query2.csv");
+    if(query2File==NULL){
+        fprintf(stderr,"Error al crear archivo Query2\n");
+        exit(CRERR);
+    }
+
+    fputs("StationA;StationB;Trips A->B; Trips B->A\n",query2File);
+
+    htmlTable table = newTable("Query2.html", 4, "StationA", "StationB", "Trips A->B", "Trips B->A");
+
+    size_t ab, ba;
+
+    for(int i = 0; i < getRealDim(bikesh); i++) { // Faltan frees
+        char * station1Name = getStationName(bikesh, i);
+        for(int j = i+1; j < getRealDim(bikesh); j++){
+            char * station2Name = getStationName(bikesh, j);
+            ab = getTripsAB(bikesh, i, j);
+            ba = getTripsAB(bikesh, j, i);
+
+            sprintf(station1Name, station2Name, ab, ba);
+            fprintf(query2File, "%s;%s;%ld;%ld\n", station1Name, station2Name, ab, ba);
+            addHTMLRow(table, station1Name, station2Name, ab, ba);
+
+            free(station2Name);
+        }
+        free(station1Name);
+    }
 
 }
 

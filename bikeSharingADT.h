@@ -4,6 +4,7 @@
 #define MAXCHAR 150
 #define TOTAL_MONTHS 12
 #define CHUNK 20
+#define STATION_ID 10
 
 #define MAX_SIZE(a,b) ( ((a) > (b)) ? (a) : (b) )
 
@@ -36,6 +37,9 @@ void freeADT(bikeSharingADT bikesh);
 
 void printmat(bikeSharingADT bikesh);
 
+void sortAlpha(bikeSharingADT bikesh);
+
+size_t getTripsAB(bikeSharingADT bikesh, int i, int j);
 
 enum errors{OK = 0, ARERR, OPENERR, CRERR, MEMERR, TOKERR};
 /* Los errores se definen de la siguiente manera:
