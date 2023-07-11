@@ -3,6 +3,7 @@
 #include "lib/htmlTable.h"
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 void query1(bikeSharingADT bikesh);
 
@@ -12,7 +13,7 @@ void query3(bikeSharingADT bikesh);
 
 void query4(bikeSharingADT bikesh);
 
-bikeSharingADT readAddCsv(const char * filename);
+bikeSharingADT readAddCsv(const char * filename, size_t yearFrom, size_t yearTo);
 
 void readName(bikeSharingADT bikesh, const char * filename);
 
@@ -20,12 +21,34 @@ FILE * newFile(const char * filename);
 
 int main( int argc, char * argv[] ){
 
-    if (argc != 3){
-        fprintf(stderr, "Arguments should be 2");
+    size_t yearFrom=0, yearTo=0;
+
+    if (argc > 5 || argc < 3){
+        fprintf(stderr, "Invalid arguments\n");
         exit(ARERR);
     }
 
-    bikeSharingADT bikesh = readAddCsv(argv[1]);
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    int year = tm.tm_year+1900;
+
+    if( argc == 3 ){
+        yearFrom = 0;
+        yearTo = year;
+    }else if( argc == 4 ){
+        yearFrom = atoi(argv[3]);
+        yearTo = year;
+    }else if( argc == 5 ){
+        yearFrom = atoi(argv[3]);
+        yearTo = atoi(argv[4]);
+    }
+    
+    if( yearFrom > yearTo ){
+        fprintf(stderr, "Invalid year arguments\n");
+        exit(ARERR);
+    }
+
+    bikeSharingADT bikesh = readAddCsv(argv[1], yearFrom, yearTo);
     readName(bikesh, argv[2]);
 
     query1(bikesh);
@@ -38,7 +61,7 @@ int main( int argc, char * argv[] ){
     return 0;
 }
 
-bikeSharingADT readAddCsv(const char * filename){
+bikeSharingADT readAddCsv(const char * filename, size_t yearFrom, size_t yearTo){
 
     FILE * file = fopen(filename, "rt");
         if(file == NULL){
@@ -86,7 +109,7 @@ bikeSharingADT readAddCsv(const char * filename){
         station2Id = atoi(strtok(NULL, ";")); 
         isMember = atoi(strtok(NULL, "\n"));
 
-        addStation(bikesh, station1Id, isMember, startDate, station2Id);
+        addStation(bikesh, station1Id, isMember, startDate, station2Id, yearFrom, yearTo);
         addMatrix(bikesh, station1Id, station2Id, &flagError);
         if (flagError == MEMERR){    
             fprintf(stderr, "Memory Error");

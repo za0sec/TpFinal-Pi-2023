@@ -5,7 +5,6 @@
 #include <ctype.h>
 
 typedef struct stationData{
-    lista de viaje a x estacion
     char * stationName;
     size_t memberTrips;
     size_t stationId; // Id de estacion de salida
@@ -78,7 +77,6 @@ static int compareRoundTrips(const void *a, const void *b){
 
 }
 
-
 static int getMonth(const char * startDate){
    
     char monthStr[3];
@@ -91,7 +89,19 @@ static int getMonth(const char * startDate){
     return month;
 }
 
-void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate, size_t station2Id){
+static int getYear(const char * startDate){
+   
+    char yearStr[5];
+
+    strncpy(yearStr, &startDate[0], 4);
+    yearStr[4] = '\0';
+
+    int year = atoi(yearStr);
+
+    return year;
+}
+
+void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate, size_t station2Id, size_t yearFrom, size_t yearTo){
     if (bikesh->dim < station1Id){
         bikesh->rankingStations = realloc(bikesh->rankingStations, station1Id * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
     
@@ -119,8 +129,9 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char 
    
     bikesh->rankingStations[station1Id-1].vecMonths[getMonth(startDate)-1]++;
 
-    if(station1Id == station2Id)
+    if((station1Id == station2Id) && (getYear(startDate) >= yearFrom) && (getYear(startDate) <= yearTo)){
         bikesh->rankingStations[station1Id-1].roundTrips++;
+    }
 }
 
 static char * copyStr(const char * s){
