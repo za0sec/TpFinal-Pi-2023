@@ -118,7 +118,6 @@ void readName(bikeSharingADT bikesh, const char * filename){
     size_t stationId;
     char * token;
     char * stationName;
-    int flag = 0;
 
 // EL ERROR ESTA EN ESTA FUNCION AL TRATAR DE LEER ARCHIVOS Y ACCEDE A MEMORIA NO DEFINIDA!!!!!!!!!
 
@@ -140,8 +139,9 @@ void readName(bikeSharingADT bikesh, const char * filename){
         strtok(NULL, ";");//Salteo Latitud 
         strtok(NULL, "\n"); //y longitud.
         
-        stringcpy(bikesh, stationName, stationId, &flag);
-        if (flag == MEMERR){    
+        bikesh = stringcpy(bikesh, stationName, stationId);
+        
+        if (bikesh == NULL){ 
             fprintf(stderr, "Memory Error");
             exit(MEMERR);
         } //copia en nuestro vector ordenado por stationIds, el nombre de la estación.
@@ -176,15 +176,12 @@ void query1(bikeSharingADT bikesh){
         char * stationName = getStationName(bikesh, i);
         fprintf(query1File, "%s;%s\n", stationName, aux);
         addHTMLRow(table, stationName, aux);
-        free(stationName); // libera la memoria
+        free(stationName);
     }
 
     fclose(query1File);
 
     closeHTMLTable(table); 
-
-
-//voy a tener que ordenar una copia del vector del ADT por orden alfabetico de las stations
 
 }
 
@@ -220,6 +217,10 @@ void query2(bikeSharingADT bikesh){
         free(station1Name);
     }
 
+    fclose(query2File);
+
+    closeHTMLTable(table);
+
 }
                                     // EN LOS MESES 1 2 3 y 12 NO HAY VIAJES
 void query3(bikeSharingADT bikesh){  // ESTA IMPRIMIENDO NUMEROS NEGATIVOS
@@ -234,40 +235,36 @@ void query3(bikeSharingADT bikesh){  // ESTA IMPRIMIENDO NUMEROS NEGATIVOS
 
     htmlTable table = newTable("Query3.html", 13, "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D", "Station");
     
-    char m1[MONTHS_LENGTH];
-    char m2[MONTHS_LENGTH];
-    char m3[MONTHS_LENGTH];
-    char m4[MONTHS_LENGTH];
-    char m5[MONTHS_LENGTH];
-    char m6[MONTHS_LENGTH];
-    char m7[MONTHS_LENGTH];
-    char m8[MONTHS_LENGTH];
-    char m9[MONTHS_LENGTH];
-    char m10[MONTHS_LENGTH];
-    char m11[MONTHS_LENGTH];
-    char m12[MONTHS_LENGTH];
+    char monthStrings[TOTAL_MONTHS][MONTHS_LENGTH];
 
     for(int i = 0 ; i < getRealDim(bikesh); i++){
         char * stationName = getStationName(bikesh, i);
-        sprintf(m1, "%ld", getMonthTrip(bikesh, i, 0));
-        sprintf(m2, "%ld", getMonthTrip(bikesh, i, 1));
-        sprintf(m3, "%ld", getMonthTrip(bikesh, i, 2));
-        sprintf(m4, "%ld", getMonthTrip(bikesh, i, 3));
-        sprintf(m5, "%ld", getMonthTrip(bikesh, i, 4));
-        sprintf(m6, "%ld", getMonthTrip(bikesh, i, 5));
-        sprintf(m7, "%ld", getMonthTrip(bikesh, i, 6));
-        sprintf(m8, "%ld", getMonthTrip(bikesh, i, 7));
-        sprintf(m9, "%ld", getMonthTrip(bikesh, i, 8));
-        sprintf(m10, "%ld", getMonthTrip(bikesh, i, 9));
-        sprintf(m11, "%ld", getMonthTrip(bikesh, i, 10));
-        sprintf(m12, "%ld", getMonthTrip(bikesh, i, 11)); //a mejorar
-        fprintf(query3File, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n", m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, stationName);
-        addHTMLRow(table, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, stationName);
+        for(int j = 0; j < TOTAL_MONTHS; j++) {
+            sprintf(monthStrings[j], "%ld", getMonthTrip(bikesh, i, j));
+        }
+
+        fprintf(query3File, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",
+            monthStrings[0], monthStrings[1], monthStrings[2], monthStrings[3], monthStrings[4], 
+            monthStrings[5], monthStrings[6], monthStrings[7], monthStrings[8], monthStrings[9], 
+            monthStrings[10], monthStrings[11], stationName);
+
+        addHTMLRow(table, monthStrings[0], monthStrings[1], monthStrings[2], monthStrings[3], monthStrings[4], 
+               monthStrings[5], monthStrings[6], monthStrings[7], monthStrings[8], monthStrings[9], 
+               monthStrings[10], monthStrings[11], stationName);
+
         free(stationName);
     }
+
+    fclose(query3File);
+
+    closeHTMLTable(table);
+
+
 }
 
 void query4(bikeSharingADT bikesh){
+
+    roundTripSort(bikesh);
 
     FILE * query4File = newFile("Query4.csv");
     if(query4File==NULL){
@@ -288,6 +285,10 @@ void query4(bikeSharingADT bikesh){
         addHTMLRow(table, stationName, roundTrip);
         free(stationName);
     }
+
+    fclose(query4File);
+
+    closeHTMLTable(table);
 
 }
 

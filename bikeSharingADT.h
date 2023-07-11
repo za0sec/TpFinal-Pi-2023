@@ -3,8 +3,9 @@
 #include <stdio.h>
 #define MAXCHAR 150
 #define TOTAL_MONTHS 12
-#define MONTHS_LENGTH 21 // a saber porque
 #define CHUNK 20
+//Estos define son para los strings estaticos que se usan en los querys y usamos numeros mas grandes de lo maximo que realmente puede pasar.
+#define MONTHS_LENGTH 10
 #define STATION_ID_LENGHT 10
 #define TRIPS_LENGHT 10
 
@@ -30,8 +31,7 @@ char * getStationName(bikeSharingADT bikesh, int pos);
 
 void addMatrix(bikeSharingADT bikesh, size_t station1Id, size_t station2Id, size_t * flagError);
 
-//Copia un string 
-void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag);
+bikeSharingADT stringcpy(bikeSharingADT bikesh, char * from, size_t stationId);
     
 void freeADT(bikeSharingADT bikesh);
 
@@ -39,7 +39,7 @@ void sortAlpha(bikeSharingADT bikesh);
 
 size_t getTripsAB(bikeSharingADT bikesh, int i, int j);
 
-size_t getMonthTrip(bikeSharingADT bikesh, size_t stationId, int month);
+size_t getMonthTrip(bikeSharingADT bikesh, size_t stationId, size_t month);
 
 void roundTripSort(bikeSharingADT bikesh);
 

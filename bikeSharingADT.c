@@ -80,9 +80,15 @@ bikeSharingADT newBikeSharing(void){
 }
 
 static int getMonth(const char * startDate){
-    int anio, mes, dia, hora, minuto, segundo;
-    sscanf(startDate, "%d-%d-%d %d:%d:%d", &anio, &mes, &dia, &hora, &minuto, &segundo);
-    return mes;
+   
+    char monthStr[3];
+
+    strncpy(monthStr, &startDate[5], 2);
+    monthStr[2] = '\0';
+
+    int month = atoi(monthStr);
+
+    return month;
 }
 
 void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate, size_t station2Id){
@@ -95,23 +101,28 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char 
             bikesh->rankingStations[i].stationId = 0;
             bikesh->rankingStations[i].used = 0;
             bikesh->rankingStations[i].roundTrips = 0;
+            for(int j = 0; j < TOTAL_MONTHS; j++){
+                bikesh->rankingStations[i].vecMonths[j] = 0;
+            }
+
         }
         bikesh->dim = station1Id;
     }
+
     if (!bikesh->rankingStations[station1Id-1].used){
         bikesh->realDim++;
         bikesh->rankingStations[station1Id-1].used = 1;
-        // bikesh->rankingStations[station1Id-1].memberTrips = 0;
-        for(int j = 0; j < TOTAL_MONTHS; j++){
-            bikesh->rankingStations[station1Id-1].vecMonths[j] = 0; //no estamos seguros si no va con un for para ponerle todos 0s
-        }
+
     }
+
     if(isMember)
         bikesh->rankingStations[station1Id-1].memberTrips++;
+    
     bikesh->rankingStations[station1Id-1].vecMonths[getMonth(startDate)-1]++;
+    
     if(station1Id == station2Id)
         bikesh->rankingStations[station1Id-1].roundTrips++;
-} //al final de esta funcion, deberiamos tener todos los stationData ordenador por stationId en un vector
+}
 
 static char * copyStr(const char * s){
     char * copy = malloc(strlen(s) + 1);
@@ -157,14 +168,16 @@ char * getStationName(bikeSharingADT bikesh, int pos){
     return copyStr(bikesh->rankingStations[pos].stationName);
 }
 
-void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag){
- 
+bikeSharingADT stringcpy(bikeSharingADT bikesh, char * from, size_t stationId){
+
     bikesh->rankingStations[stationId-1].stationName = realloc(bikesh->rankingStations[stationId-1].stationName, (strlen(from)+1) * sizeof(char));
     if (bikesh->rankingStations[stationId-1].stationName == NULL){
-        (*flag) = MEMERR;
-        return;
+        return NULL;
     }
+    
     strcpy(bikesh->rankingStations[stationId-1].stationName, from); 
+
+    return bikesh;
 
 }
 
@@ -224,7 +237,7 @@ size_t getTripsAB(bikeSharingADT bikesh, int i, int j){
     return bikesh->mat[i][j];
 }
 
-size_t getMonthTrip(bikeSharingADT bikesh, size_t stationId, int month){
+size_t getMonthTrip(bikeSharingADT bikesh, size_t stationId, size_t month){
     return bikesh->rankingStations[stationId].vecMonths[month];
 }
 
