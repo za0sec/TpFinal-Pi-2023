@@ -80,7 +80,7 @@ bikeSharingADT readAddCsv(const char * filename){
         station2Id = atoi(strtok(NULL, ";")); 
         isMember = atoi(strtok(NULL, "\n"));
 
-        addStation(bikesh, station1Id, isMember); //SOLO QUERY 1
+        addStation(bikesh, station1Id, isMember, startDate); //SOLO QUERY 1
         addMatrix(bikesh, station1Id, station2Id, &flagError);
         if (flagError == MEMERR){    
             fprintf(stderr, "Memory Error");
@@ -196,8 +196,8 @@ void query2(bikeSharingADT bikesh){
 
     htmlTable table = newTable("Query2.html", 4, "StationA", "StationB", "Trips A->B", "Trips B->A");
 
-    char ab[TRIP_LENGHT];
-    char ba[TRIP_LENGHT];
+    char ab[TRIPS_LENGHT];
+    char ba[TRIPS_LENGHT];
 
     for(int i = 0; i < getRealDim(bikesh); i++) { // Faltan frees
         char * station1Name = getStationName(bikesh, i);

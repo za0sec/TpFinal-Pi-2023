@@ -15,7 +15,7 @@ typedef struct bikeSharingCDT * bikeSharingADT;
 bikeSharingADT newBikeSharing(void);
 
 // Agrega un nodo a la lista
-void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember);
+void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate);
 
 void tripSort(bikeSharingADT bikesh);
 

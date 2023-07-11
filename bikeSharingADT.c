@@ -10,7 +10,7 @@ typedef struct stationData{
     size_t memberTrips;
     size_t stationId; // Id de estacion de salida
     size_t used;
-    //int vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
+    int vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
 }stationData;
 
 typedef struct bikeSharingCDT{
@@ -59,7 +59,13 @@ bikeSharingADT newBikeSharing(void){
     return calloc(1, sizeof(bikeSharingCDT));
 }
 
-void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
+static int getMonth(const char * startDate){
+    int anio, mes, dia, hora, minuto, segundo;
+    sscanf(startDate, "%d-%d-%d %d:%d:%d", &anio, &mes, &dia, &hora, &minuto, &segundo);
+    return mes;
+}
+
+void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate){
     if (bikesh->dim < station1Id){
         bikesh->rankingStations = realloc(bikesh->rankingStations, station1Id * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
     
@@ -68,6 +74,9 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
             bikesh->rankingStations[i].stationName = NULL;
             bikesh->rankingStations[i].stationId = 0;
             bikesh->rankingStations[i].used = 0;
+            for(int j = 0; j < TOTAL_MONTHS; j++){
+                bikesh->rankingStations[i].vecMonths[j] = 0; //no estamos seguros si no va con un for para ponerle todos 0s
+            }
         }
         bikesh->dim = station1Id;
     }
@@ -78,7 +87,7 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
     }
     if(isMember)
         bikesh->rankingStations[station1Id-1].memberTrips++;
-    
+    bikesh->rankingStations[station1Id-1].vecMonths[getMonth(startDate)-1]++;
 } //al final de esta funcion, deberiamos tener todos los stationData ordenador por stationId en un vector
 
 static char * copyStr(const char * s){
@@ -224,4 +233,3 @@ void freeADT(bikeSharingADT bikesh){
 
 
 }
-
