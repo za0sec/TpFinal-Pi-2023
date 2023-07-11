@@ -11,6 +11,7 @@ typedef struct stationData{
     size_t stationId; // Id de estacion de salida
     size_t used;
     size_t vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
+    size_t roundTrips;
 }stationData;
 
 typedef struct bikeSharingCDT{
@@ -55,6 +56,25 @@ static int compare(const void *a, const void *b){
     return cmp;
 }
 
+static int compareRoundTrips(const void *a, const void *b){
+    stationData *station1 = (stationData *)a;
+    stationData *station2 = (stationData *)b;
+
+    int cmp = 0;
+
+    if(station1->roundTrips < station2->roundTrips){
+        cmp = 1;
+    } else if (station1->roundTrips > station2->roundTrips){
+        cmp = -1;
+    }
+
+    if(!cmp)
+        cmp = my_strcasecmp(station1->stationName, station2->stationName);
+    
+    return cmp;
+
+}
+
 bikeSharingADT newBikeSharing(void){
     return calloc(1, sizeof(bikeSharingCDT));
 }
@@ -65,7 +85,7 @@ static int getMonth(const char * startDate){
     return mes;
 }
 
-void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate){
+void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate, size_t station2Id){
     if (bikesh->dim < station1Id){
         bikesh->rankingStations = realloc(bikesh->rankingStations, station1Id * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
     
@@ -74,6 +94,7 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char 
             bikesh->rankingStations[i].stationName = NULL;
             bikesh->rankingStations[i].stationId = 0;
             bikesh->rankingStations[i].used = 0;
+            bikesh->rankingStations[i].roundTrips = 0;
         }
         bikesh->dim = station1Id;
     }
@@ -88,6 +109,8 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char 
     if(isMember)
         bikesh->rankingStations[station1Id-1].memberTrips++;
     bikesh->rankingStations[station1Id-1].vecMonths[getMonth(startDate)-1]++;
+    if(station1Id == station2Id)
+        bikesh->rankingStations[i].roundTrips += 1;
 } //al final de esta funcion, deberiamos tener todos los stationData ordenador por stationId en un vector
 
 static char * copyStr(const char * s){
@@ -203,6 +226,16 @@ size_t getTripsAB(bikeSharingADT bikesh, int i, int j){
 
 size_t getMonthTrip(bikeSharingADT bikesh, size_t stationId, int month){
     return bikesh->rankingStations[stationId].vecMonths[month];
+}
+
+void roundTripSort(bikeSharingADT bikesh){
+
+    qsort(bikesh->rankingStations, bikesh->realDim, sizeof(stationData), compareRoundTrips);
+
+}
+
+size_t getRoundTrip(bikeSharingADT bikesh, int pos){
+    return bikesh->rankingStations[pos].roundTrip;
 }
 
 void freeADT(bikeSharingADT bikesh){

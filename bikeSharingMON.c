@@ -85,7 +85,7 @@ bikeSharingADT readAddCsv(const char * filename){
         station2Id = atoi(strtok(NULL, ";")); 
         isMember = atoi(strtok(NULL, "\n"));
 
-        addStation(bikesh, station1Id, isMember, startDate); //SOLO QUERY 1
+        addStation(bikesh, station1Id, isMember, startDate, station2Id);
         addMatrix(bikesh, station1Id, station2Id, &flagError);
         if (flagError == MEMERR){    
             fprintf(stderr, "Memory Error");
@@ -277,6 +277,16 @@ void query4(bikeSharingADT bikesh){
     fputs("Station;RoundingTrips\n",query4File);
 
     htmlTable table = newTable("Query4.html", 2, "Station", "RoundingTrips");
+
+    char roundTrip[TRIPS_LENGHT];
+
+    for(int i = 0 ; i < getRealDim(bikesh) ; i++){
+        char * stationName = getStationName(bikesh, i);
+        sprint(roundTrip, "%ld", getRoundTrip(bikesh, i));
+        fprintf(query4File, "%s;%s\n", stationName, roundTrip);
+        addHTMLRow(table, stationName, roundTrip);
+        free(stationName);
+    }
 
     
 

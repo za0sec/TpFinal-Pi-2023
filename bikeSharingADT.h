@@ -16,7 +16,7 @@ typedef struct bikeSharingCDT * bikeSharingADT;
 bikeSharingADT newBikeSharing(void);
 
 // Agrega un nodo a la lista
-void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate);
+void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate, size_t station2Id);
 
 void tripSort(bikeSharingADT bikesh);
 
@@ -40,6 +40,10 @@ void sortAlpha(bikeSharingADT bikesh);
 size_t getTripsAB(bikeSharingADT bikesh, int i, int j);
 
 size_t getMonthTrip(bikeSharingADT bikesh, size_t stationId, int month);
+
+void roundTripSort(bikeSharingADT bikesh);
+
+size_t getRoundTrip(bikeSharingADT bikesh, int pos);
 
 enum errors{OK = 0, ARERR, OPENERR, CRERR, MEMERR, TOKERR};
 /* Los errores se definen de la siguiente manera:
