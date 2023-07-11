@@ -110,7 +110,7 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char 
         bikesh->rankingStations[station1Id-1].memberTrips++;
     bikesh->rankingStations[station1Id-1].vecMonths[getMonth(startDate)-1]++;
     if(station1Id == station2Id)
-        bikesh->rankingStations[i].roundTrips += 1;
+        bikesh->rankingStations[station1Id-1].roundTrips++;
 } //al final de esta funcion, deberiamos tener todos los stationData ordenador por stationId en un vector
 
 static char * copyStr(const char * s){
@@ -235,7 +235,7 @@ void roundTripSort(bikeSharingADT bikesh){
 }
 
 size_t getRoundTrip(bikeSharingADT bikesh, int pos){
-    return bikesh->rankingStations[pos].roundTrip;
+    return bikesh->rankingStations[pos].roundTrips;
 }
 
 void freeADT(bikeSharingADT bikesh){

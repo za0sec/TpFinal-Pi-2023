@@ -31,6 +31,7 @@ int main( int argc, char * argv[] ){
     query1(bikesh);
     query2(bikesh);
     query3(bikesh);
+    query4(bikesh);
 
     freeADT(bikesh);
 
@@ -282,13 +283,11 @@ void query4(bikeSharingADT bikesh){
 
     for(int i = 0 ; i < getRealDim(bikesh) ; i++){
         char * stationName = getStationName(bikesh, i);
-        sprint(roundTrip, "%ld", getRoundTrip(bikesh, i));
+        sprintf(roundTrip, "%ld", getRoundTrip(bikesh, i));
         fprintf(query4File, "%s;%s\n", stationName, roundTrip);
         addHTMLRow(table, stationName, roundTrip);
         free(stationName);
     }
-
-    
 
 }
 
