@@ -201,17 +201,9 @@ size_t getTripsAB(bikeSharingADT bikesh, int i, int j){
     return bikesh->mat[i][j];
 }
 
-void printmat(bikeSharingADT bikesh){
-
-    for( int i = 0; i < bikesh->dimMat; i++ ){
-        for( int j = 0; j < bikesh->dimMat; j++ ){
-            printf("%ld  ", bikesh->mat[i][j] );
-        }
-        puts("");
-    }
-
+size_t getMonthTrip(bikeSharingADT bikesh, size_t stationId, int month){
+    return bikesh->rankingStations[stationId].vecMonths[month];
 }
-
 
 void freeADT(bikeSharingADT bikesh){
 

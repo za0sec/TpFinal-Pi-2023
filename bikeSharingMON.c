@@ -8,6 +8,8 @@ void query1(bikeSharingADT bikesh);
 
 void query2(bikeSharingADT bikesh);
 
+void query3(bikeSharingADT bikesh);
+
 bikeSharingADT readAddCsv(const char * filename);
 
 void readName(bikeSharingADT bikesh, const char * filename);
@@ -26,6 +28,7 @@ int main( int argc, char * argv[] ){
 
     query1(bikesh);
     query2(bikesh);
+    query3(bikesh);
 
     freeADT(bikesh);
 
@@ -199,7 +202,7 @@ void query2(bikeSharingADT bikesh){
     char ab[TRIPS_LENGHT];
     char ba[TRIPS_LENGHT];
 
-    for(int i = 0; i < getRealDim(bikesh); i++) { // Faltan frees
+    for(int i = 0; i < getRealDim(bikesh); i++) {
         char * station1Name = getStationName(bikesh, i);
         for(int j = i+1; j < getRealDim(bikesh); j++){
             char * station2Name = getStationName(bikesh, j);
@@ -216,6 +219,50 @@ void query2(bikeSharingADT bikesh){
 
 }
 
+void query3(bikeSharingADT bikesh){
+
+    FILE * query3File = newFile("Query3.csv");
+    if(query3File==NULL){
+        fprintf(stderr,"Error al crear archivo Query3\n");
+        exit(CRERR);
+    }
+
+    fputs("J;F;M;A;M;J;J;A;S;O;N;D;Station\n",query3File);
+
+    htmlTable table = newTable("Query3.html", 13, "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D", "Station");
+    
+    char m1[MONTHS_LENGTH];
+    char m2[MONTHS_LENGTH];
+    char m3[MONTHS_LENGTH];
+    char m4[MONTHS_LENGTH];
+    char m5[MONTHS_LENGTH];
+    char m6[MONTHS_LENGTH];
+    char m7[MONTHS_LENGTH];
+    char m8[MONTHS_LENGTH];
+    char m9[MONTHS_LENGTH];
+    char m10[MONTHS_LENGTH];
+    char m11[MONTHS_LENGTH];
+    char m12[MONTHS_LENGTH];
+
+    for(int i = 0 ; i < getRealDim(bikesh); i++){
+        char * stationName = getStationName(bikesh, i);
+        sprintf(m1, "%ld", getMonthTrip(bikesh, i, 0));
+        sprintf(m2, "%ld", getMonthTrip(bikesh, i, 1));
+        sprintf(m3, "%ld", getMonthTrip(bikesh, i, 2));
+        sprintf(m4, "%ld", getMonthTrip(bikesh, i, 3));
+        sprintf(m5, "%ld", getMonthTrip(bikesh, i, 4));
+        sprintf(m6, "%ld", getMonthTrip(bikesh, i, 5));
+        sprintf(m7, "%ld", getMonthTrip(bikesh, i, 6));
+        sprintf(m8, "%ld", getMonthTrip(bikesh, i, 7));
+        sprintf(m9, "%ld", getMonthTrip(bikesh, i, 8));
+        sprintf(m10, "%ld", getMonthTrip(bikesh, i, 9));
+        sprintf(m11, "%ld", getMonthTrip(bikesh, i, 10));
+        sprintf(m12, "%ld", getMonthTrip(bikesh, i, 11)); //a mejorar
+        fprintf(query3File, "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n", m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, stationName);
+        addHTMLRow(table, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, stationName);
+        free(stationName);
+    }
+}
 
 FILE * newFile(const char * filename){
     FILE * new = fopen(filename, "wt");
