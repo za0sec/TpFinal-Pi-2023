@@ -14,8 +14,6 @@ typedef struct stationData{
 }stationData;
 
 typedef struct bikeSharingCDT{
-    // TList first; //Lista para guardar los datos de NYC
-    // TList iterator;  //Iterador al siguiente.
     stationData * rankingStations;
     size_t dim; //Dimension de todas las stations sin usar y usadas. ---- Para NYC es la dimension de la lista.
     size_t realDim; //Dimension solo de las stations usadas. ---- PARA NYC no existe.
@@ -113,14 +111,13 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char 
     if (!bikesh->rankingStations[station1Id-1].used){
         bikesh->realDim++;
         bikesh->rankingStations[station1Id-1].used = 1;
-
     }
 
     if(isMember)
         bikesh->rankingStations[station1Id-1].memberTrips++;
     
     bikesh->rankingStations[station1Id-1].vecMonths[getMonth(startDate)-1]++;
-    
+
     if(station1Id == station2Id)
         bikesh->rankingStations[station1Id-1].roundTrips++;
 }

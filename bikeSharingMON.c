@@ -223,7 +223,7 @@ void query2(bikeSharingADT bikesh){
 
 }
                                     // EN LOS MESES 1 2 3 y 12 NO HAY VIAJES
-void query3(bikeSharingADT bikesh){  // ESTA IMPRIMIENDO NUMEROS NEGATIVOS
+void query3(bikeSharingADT bikesh){
 
     FILE * query3File = newFile("Query3.csv");
     if(query3File==NULL){
