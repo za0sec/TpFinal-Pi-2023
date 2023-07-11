@@ -29,9 +29,9 @@ int main( int argc, char * argv[] ){
     readName(bikesh, argv[2]);
 
     query1(bikesh);
-    query2(bikesh);
-    //query3(bikesh);
-    query4(bikesh);
+   // query2(bikesh);
+    query3(bikesh);
+    //query4(bikesh);
 
     freeADT(bikesh);
 
@@ -48,7 +48,7 @@ bikeSharingADT readAddCsv(const char * filename){
  
     bikeSharingADT bikesh = newBikeSharing();
     if( bikesh == NULL ){
-        fprintf(stderr, "51Memory Error\n");
+        fprintf(stderr, "Memory Error\n");
         exit(MEMERR);
     }
  
@@ -76,7 +76,7 @@ bikeSharingADT readAddCsv(const char * filename){
             if (startDate != NULL) {
                 strcpy(startDate, token);
             } else {
-                fprintf(stderr, "78Memory Error\n");
+                fprintf(stderr, "Memory Error\n");
                 exit(MEMERR);
             }
         } else {
@@ -91,7 +91,7 @@ bikeSharingADT readAddCsv(const char * filename){
         isMember = strtok(NULL, "\n")[0] == 'm' ? 1 : 0; //Quiero solo el primer caracter. Si es una m quiere decir que es miembro y sino no.
  
         addStation(bikesh, station1Id, isMember, startDate, station2Id);
-        addMatrix(bikesh, station1Id, station2Id, &flagError);
+      //  addMatrix(bikesh, station1Id, station2Id, &flagError);
         if (flagError == MEMERR){    
             fprintf(stderr, "Memory Error");
             exit(MEMERR);
@@ -132,7 +132,7 @@ void readName(bikeSharingADT bikesh, const char * filename){
             if(stationName != NULL){
                 strcpy(stationName, token);
             }else{
-                fprintf(stderr, "129Memory Error\n");
+                fprintf(stderr, "Memory Error\n");
                 exit(MEMERR);
             }
         }else{
@@ -146,7 +146,7 @@ void readName(bikeSharingADT bikesh, const char * filename){
         bikesh = stringcpy(bikesh, stationName, stationId);
  
         if (bikesh == NULL){ 
-            fprintf(stderr, "143Memory Error\n");
+            fprintf(stderr, "Memory Error\n");
             exit(MEMERR);
         } //copia en nuestro vector ordenado por stationIds, el nombre de la estación.
  
@@ -226,7 +226,7 @@ void query2(bikeSharingADT bikesh){
     closeHTMLTable(table);
 
 }
-                                    // EN LOS MESES 1 2 3 y 12 NO HAY VIAJES
+
 void query3(bikeSharingADT bikesh){
 
     FILE * query3File = newFile("out/Query3NYC.csv");

@@ -86,8 +86,6 @@ static int getMonth(const char * startDate){
     monthStr[2] = '\0';
 
     int month = atoi(monthStr);
-    
-    printf("%d", month);
 
     return month;
 }
@@ -218,7 +216,6 @@ size_t getTripsAB(bikeSharingADT bikesh, int i, int j){
 }
 
 size_t getMonthTrip(bikeSharingADT bikesh, size_t stationId, size_t month){
-    printf("%ld ", month);
     return bikesh->rankingStations[stationId].vecMonths[month];
 }
 

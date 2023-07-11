@@ -222,7 +222,7 @@ void query2(bikeSharingADT bikesh){
     closeHTMLTable(table);
 
 }
-                                    // EN LOS MESES 1 2 3 y 12 NO HAY VIAJES
+
 void query3(bikeSharingADT bikesh){
 
     FILE * query3File = newFile("out/Query3MON.csv");
