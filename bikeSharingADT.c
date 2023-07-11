@@ -136,6 +136,9 @@ void addMatrix(bikeSharingADT bikesh, size_t station1Id, size_t station2Id, size
 
         // Para cada fila agrego memoria a las columnas
         for (size_t i = 0; i < size; i++) {
+            if (i >= bikesh->dimMat) {
+                bikesh->mat[i] = NULL;  // Asegúrate de que bikesh->mat[i] esté inicializado
+            }
             bikesh->mat[i] = realloc(bikesh->mat[i], size * sizeof(size_t));
             if (bikesh->mat[i] == NULL) {
                 (*flagError) = MEMERR;
@@ -179,6 +182,10 @@ void freeADT(bikeSharingADT bikesh){
 
     if (bikesh != NULL) {
         if (bikesh->rankingStations != NULL) {
+            for (int i = 0; i < bikesh->dimMat; i++){
+                free(bikesh->mat[i]);
+            }
+            free(bikesh->mat);
             for (int i = 0; i < bikesh->realDim; i++) {
                 if (bikesh->rankingStations[i].stationName != NULL) {
                     free(bikesh->rankingStations[i].stationName);
@@ -188,6 +195,7 @@ void freeADT(bikeSharingADT bikesh){
         }
         free(bikesh);
     }
+
 
 }
 
