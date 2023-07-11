@@ -74,16 +74,16 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char 
             bikesh->rankingStations[i].stationName = NULL;
             bikesh->rankingStations[i].stationId = 0;
             bikesh->rankingStations[i].used = 0;
-            for(int j = 0; j < TOTAL_MONTHS; j++){
-                bikesh->rankingStations[i].vecMonths[j] = 0; //no estamos seguros si no va con un for para ponerle todos 0s
-            }
         }
         bikesh->dim = station1Id;
     }
     if (!bikesh->rankingStations[station1Id-1].used){
         bikesh->realDim++;
         bikesh->rankingStations[station1Id-1].used = 1;
-        bikesh->rankingStations[station1Id-1].memberTrips = 0;
+        // bikesh->rankingStations[station1Id-1].memberTrips = 0;
+        for(int j = 0; j < TOTAL_MONTHS; j++){
+            bikesh->rankingStations[i].vecMonths[j] = 0; //no estamos seguros si no va con un for para ponerle todos 0s
+        }
     }
     if(isMember)
         bikesh->rankingStations[station1Id-1].memberTrips++;
