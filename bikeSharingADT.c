@@ -10,7 +10,7 @@ typedef struct stationData{
     size_t memberTrips;
     size_t stationId; // Id de estacion de salida
     size_t used;
-    int vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
+    size_t vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
 }stationData;
 
 typedef struct bikeSharingCDT{

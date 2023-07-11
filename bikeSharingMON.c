@@ -10,6 +10,8 @@ void query2(bikeSharingADT bikesh);
 
 void query3(bikeSharingADT bikesh);
 
+void query4(bikeSharingADT bikesh);
+
 bikeSharingADT readAddCsv(const char * filename);
 
 void readName(bikeSharingADT bikesh, const char * filename);
@@ -218,8 +220,8 @@ void query2(bikeSharingADT bikesh){
     }
 
 }
-
-void query3(bikeSharingADT bikesh){
+                                    // EN LOS MESES 1 2 3 y 12 NO HAY VIAJES
+void query3(bikeSharingADT bikesh){  // ESTA IMPRIMIENDO NUMEROS NEGATIVOS
 
     FILE * query3File = newFile("Query3.csv");
     if(query3File==NULL){
@@ -262,6 +264,22 @@ void query3(bikeSharingADT bikesh){
         addHTMLRow(table, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, stationName);
         free(stationName);
     }
+}
+
+void query4(bikeSharingADT bikesh){
+
+    FILE * query4File = newFile("Query4.csv");
+    if(query4File==NULL){
+        fprintf(stderr,"Error al crear archivo Query4\n");
+        exit(CRERR);
+    }
+
+    fputs("Station;RoundingTrips\n",query4File);
+
+    htmlTable table = newTable("Query4.html", 2, "Station", "RoundingTrips");
+
+    
+
 }
 
 FILE * newFile(const char * filename){
