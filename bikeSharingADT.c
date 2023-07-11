@@ -7,7 +7,7 @@
 typedef struct stationData{
     char * stationName;
     size_t memberTrips;
-    size_t stationId; // No es necesario por el momento
+    size_t stationId; // Id de estacion de salida
     size_t used;
     //int vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
 }stationData;
@@ -16,6 +16,8 @@ typedef struct bikeSharingCDT{
     stationData * rankingStations;
     size_t dim; //Dimension de todas las stations sin usar y usadas.
     size_t realDim; //Dimension solo de las stations usadas.
+    size_t ** mat; // Matriz de adyacencia
+    size_t dimMat; // Filas y columnas de la matriz ( es cuadrada ) 
 }bikeSharingCDT;
 
 
@@ -65,8 +67,6 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember){
     
 } //al final de esta funcion, deberiamos tener todos los stationData ordenador por stationId en un vector
 
-
-
 static char * copyStr(const char * s){
     char * copy = malloc(strlen(s) + 1);
     if(copy == NULL) {
@@ -74,7 +74,6 @@ static char * copyStr(const char * s){
     }
     return strcpy(copy, s);
 }
-
 
 //Funcion que ordena el vector previamente asignado con valores. Ordena en base a los viajes realizados de mayor a menor (de miembros)
 void tripSort(bikeSharingADT bikesh){
@@ -122,6 +121,59 @@ void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag)
     strcpy(bikesh->rankingStations[stationId-1].stationName, from); 
 
 }
+
+void addMatrix(bikeSharingADT bikesh, size_t station1Id, size_t station2Id, size_t * flagError){ // Crea la matriz de adyacencia
+
+    size_t size = MAX_SIZE(station1Id, station2Id);
+
+    if (bikesh->dimMat < size){
+        // Agrego memoria para las filas
+        bikesh->mat = realloc(bikesh->mat, size * sizeof(size_t*));
+        if (bikesh->mat == NULL) {
+            (*flagError) = MEMERR;
+            return;
+        }
+
+        // Para cada fila agrego memoria a las columnas
+        for (size_t i = 0; i < size; i++) {
+            bikesh->mat[i] = realloc(bikesh->mat[i], size * sizeof(size_t));
+            if (bikesh->mat[i] == NULL) {
+                (*flagError) = MEMERR;
+                return;
+            }
+        }
+
+        // Inicializamos una parte de la matriz con 0
+        for (size_t i = 0; i < bikesh->dimMat; i++) {
+            for (size_t j = bikesh->dimMat; j < size; j++) {
+                bikesh->mat[i][j] = 0;
+            }
+        }
+
+        for (size_t i = bikesh->dimMat; i < size; i++){
+            for (size_t j = 0; j < size; j++){
+                bikesh->mat[i][j] = 0;
+            }
+        }
+        bikesh->dimMat = size; // Actualizamos el tamano de la matriz
+    }
+
+    // Llenamos la matriz con los datos
+    bikesh->mat[station1Id-1][station2Id-1]++;
+
+}
+
+void printmat(bikeSharingADT bikesh){
+
+    for( int i = 0; i < bikesh->dimMat; i++ ){
+        for( int j = 0; j < bikesh->dimMat; j++ ){
+            printf("%ld  ", bikesh->mat[i][j] );
+        }
+        puts("");
+    }
+
+}
+
 
 void freeADT(bikeSharingADT bikesh){
 

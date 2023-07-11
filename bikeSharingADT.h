@@ -5,7 +5,7 @@
 #define TOTAL_MONTHS 12
 #define CHUNK 20
 
-#define SWAP(a,b) ()
+#define MAX_SIZE(a,b) ( ((a) > (b)) ? (a) : (b) )
 
 typedef struct bikeSharingCDT * bikeSharingADT;
 
@@ -27,12 +27,14 @@ size_t getMemberTrips(bikeSharingADT bikesh, int pos);
 
 char * getStationName(bikeSharingADT bikesh, int pos);
 
+void addMatrix(bikeSharingADT bikesh, size_t station1Id, size_t station2Id, size_t * flagError);
+
 //Copia un string 
 void stringcpy(bikeSharingADT bikesh, char * from, size_t stationId, int * flag);
     
 void freeADT(bikeSharingADT bikesh);
 
-
+void printmat(bikeSharingADT bikesh);
 
 
 enum errors{OK = 0, ARERR, OPENERR, CRERR, MEMERR, TOKERR};

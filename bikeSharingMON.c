@@ -6,6 +6,8 @@
 
 void query1(bikeSharingADT bikesh);
 
+void query2(bikeSharingADT bikesh);
+
 bikeSharingADT readAddCsv(const char * filename);
 
 void readName(bikeSharingADT bikesh, const char * filename);
@@ -22,6 +24,7 @@ int main( int argc, char * argv[] ){
     bikeSharingADT bikesh = readAddCsv(argv[1]);
     readName(bikesh, argv[2]);
 
+    query2(bikesh);
     query1(bikesh);
 
     freeADT(bikesh);
@@ -56,6 +59,7 @@ bikeSharingADT readAddCsv(const char * filename){
     size_t station1Id;
     size_t station2Id;
     size_t isMember;
+    size_t flagError = 0;
 
     while( fgets(readText, MAXCHAR, file) != NULL ){
         char* token = strtok(readText, ";");
@@ -77,6 +81,11 @@ bikeSharingADT readAddCsv(const char * filename){
         isMember = atoi(strtok(NULL, "\n"));
 
         addStation(bikesh, station1Id, isMember); //SOLO QUERY 1
+        addMatrix(bikesh, station1Id, station2Id, &flagError);
+        if (flagError == MEMERR){    
+            fprintf(stderr, "Memory Error");
+            exit(MEMERR);
+        }
 
         free(startDate);
 
@@ -174,6 +183,13 @@ void query1(bikeSharingADT bikesh){
 //voy a tener que ordenar una copia del vector del ADT por orden alfabetico de las stations
 
 }
+
+void query2(bikeSharingADT bikesh){
+
+    printmat(bikesh);
+
+}
+
 
 FILE * newFile(const char * filename){
     FILE * new = fopen(filename, "wt");
