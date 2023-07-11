@@ -4,36 +4,35 @@
 #include <string.h>
 #include <ctype.h>
 
-typedef struct node * TList;
+// typedef struct node * TList;
 
-typedef struct element{
-    char * stationName;
-    size_t memberTrips;
-    size_t stationId; // Id de estacion de salida
-    size_t used;
-    size_t vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
-    size_t roundTrips;
-}element;
+// typedef struct element{
+//     char * stationName;
+//     size_t memberTrips;
+//     size_t stationId; // Id de estacion de salida
+//     size_t vecMonths[TOTAL_MONTHS];
+//     size_t roundTrips;
+// }element;
 
-typedef struct node{
+// typedef struct node{
 
-    element elem;
-    struct * node tail;
+//     element elem;
+//     struct * node tail;
 
-}TNode;
+// }TNode;
 
 typedef struct stationData{
     char * stationName;
     size_t memberTrips;
     size_t stationId; // Id de estacion de salida
     size_t used;
-    size_t vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
+    size_t vecMonths[TOTAL_MONTHS];
     size_t roundTrips;
 }stationData;
 
 typedef struct bikeSharingCDT{
-    TList first; //Lista para guardar los datos de NYC
-    TList iterator;  //Iterador al siguiente.
+    // TList first; //Lista para guardar los datos de NYC
+    // TList iterator;  //Iterador al siguiente.
     stationData * rankingStations;
     size_t dim; //Dimension de todas las stations sin usar y usadas. ---- Para NYC es la dimension de la lista.
     size_t realDim; //Dimension solo de las stations usadas. ---- PARA NYC no existe.
@@ -300,33 +299,112 @@ bikeSharingADT newBikeSharing(void){
 
 
 /* -----------------------------------------------------------------------BikesharingNYC-------------------------------------------------------------------------------- */
+// static TList addDataRec(TList list, size_t station1Id, size_t isMember, char * startDate, size_t station2Id){
+//     if(list == NULL || list->elem.stationId > station1Id){
+//         TList aux = malloc(sizeof(TNode));
+//         aux->elem.stationId = station1Id;
+//         aux->elem.stationName = NULL;
+//         // aux->elem.roundTrips = (station1Id == station2Id) ? 1 : 0;
+//         aux->elem.memberTrips = isMember ? 1 : 0;
+//         for(int i = 0; i < TOTAL_MONTHS; i++){
+//             aux->elem.vecMonths[i] = 0;
+//         }
+//         return aux;
+//     }
+//     if(list->elem.stationId == station1Id){
+//         // list->elem.roundTrips += (station1Id == station2Id) ? 1 : 0; 
+//         list->elem.memberTrips += isMember ? 1 : 0;
+//         return list;
+//     }
+//     list->tail = addDataRec(list->tail, station1Id, isMember, startDate, station2Id);
+//     return list;
+// } //cargamos toda la data de todos los viajes en una lista ordenada por stationsIds.
 
+// bikeSharingADT addData(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate, size_t station2Id){
+//     bikesh->first = addDataRec(bikesh->first, station1Id, isMember, startDate, station2Id);
+//     return bikesh;
+// }
 
-bikeSharingADT addData(bikeSharingADT bikesh){
+// static TList tripSortRec(bikeSharingADT bikesh){
 
+// }
 
+// bikeSharingADT tripSortNYC(bikeSharingADT bikesh){
+//     bikesh->first = tripSortRec(bikesh->first);
+//     return bikesh;
+// }
 
-}
+// void toBegin(bikeSharingADT bikesh){
+//     bikesh->iterator = bikesh->first;
+// }
 
+// size_t hasNext(bikeSharingADT bikesh){
+//     return bikesh->iterator != NULL;
+// }
 
-void toBegin(bikeSharingADT bikesh){
-    bikesh->iterator = bikesh->first;
-}
+// element next(bikeSharingADT bikesh){
+//    if (hasNext(bikesh)){
+//         element aux = bikesh->iterator->elem;
+//         bikesh->iterator = bikesh->iterator->tail;
+//         return aux;
+//     }
+//     exit(NEXERR);
+// }
 
-size_t hasNext(bikeSharingADT bikesh){
+// void freeListRec(TList list){
 
-    return bikesh->iterator != NULL;
+// }
 
-}
+char * stationName;
+    size_t memberTrips;
+    size_t stationId; // Id de estacion de salida
+    // size_t used;
+    size_t vecMonths[TOTAL_MONTHS];
+    size_t roundTrips;
 
-element next(bikeSharingADT bikesh){
-   if (hasNext(bikesh)){
-        element aux = bikesh->iterator->elem;
-        bikesh->iterator = bikesh->iterator->tail;
-        return aux;
+void addStationNYC(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate, size_t station2Id){
+    if (!(bikesh->dim % CHUNK)){
+        bikesh->rankingStations = realloc(bikesh->rankingStations, (bikesh->dim+CHUNK) * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
+        for(int i=bikesh->dim; i<(bikesh->dim + CHUNK); i++){
+            bikesh->rankingStations[i].memberTrips = 0;
+            bikesh->rankingStations[i].stationName = NULL;
+            bikesh->rankingStations[i].stationId = 0;
+            bikesh->rankingStations[i].used = 0;
+            bikesh->rankingStations[i].roundTrips = 0;
+            for(int j = 0; j < TOTAL_MONTHS; j++){
+                bikesh->rankingStations[i].vecMonths[j] = 0;
+            }
+
+        }
+    }
+    bikesh->dim += 1;
+    bikesh->rankingStations[bikesh->dim - 1].stationId = station1Id;
+    bikesh->rankingStations[bikesh->dim - 1].used = 1;
+    for(int j = 0; j < bikesh->dim; j++){
+        if(bikesh->rankingStations[j].stationId == station1Id){
+            bikesh->rankingStations[j].memberTrips += isMember;
+            // bikesh->rankingStations[j].roundTrips += (station1Id == station2Id)? 1 : 0; QUERY 4?
+            return;
+        }
     }
 
-    exit(NEXERR);
+    // bikesh->rankingStations[station1Id-1].vecMonths[getMonth(startDate)-1]++;
+    
+    // if(station1Id == station2Id)
+    //     bikesh->rankingStations[station1Id-1].roundTrips++;
 }
 
 
+bikeSharingADT stringcpyNYC(bikeSharingADT bikesh, char * from, size_t stationId){
+    for(int i = 0; i < bikesh->dim; i++){
+        if(stationId == bikesh->rankingStations[i].stationId){
+            bikesh->rankingStations[i].stationName = realloc(bikesh->rankingStations[i].stationName, (strlen(from)+1) * sizeof(char));
+            if (bikesh->rankingStations[i].stationName == NULL){
+                return NULL;
+            }
+            strcpy(bikesh->rankingStations[i].stationName, from); 
+            return bikesh;
+        }
+    }
+    return NULL;
+}

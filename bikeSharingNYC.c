@@ -29,9 +29,9 @@ int main( int argc, char * argv[] ){
     readName(bikesh, argv[2]);
 
     query1(bikesh);
-    query2(bikesh);
-    query3(bikesh);
-    query4(bikesh);
+    // query2(bikesh);
+    // query3(bikesh);
+    // query4(bikesh);
 
     freeADT(bikesh);
 
@@ -87,7 +87,7 @@ bikeSharingADT readAddCsv(const char * filename){
         strtok(NULL, ";");
         station2Id = atoi(strtok(NULL, ";")); 
         strtok(NULL, ";");
-        strtok(NULL, "\n")[0] == 'm' ? isMember = 1 : isMember = 0; //Quiero solo el primer caracter. Si es una m quiere decir que es miembro y sino no.
+        isMember = strtok(NULL, "\n")[0] == 'm' ? 1 : 0; //Quiero solo el primer caracter. Si es una m quiere decir que es miembro y sino no.
 
 
 
@@ -120,7 +120,6 @@ void readName(bikeSharingADT bikesh, const char * filename){
 // EL ERROR ESTA EN ESTA FUNCION AL TRATAR DE LEER ARCHIVOS Y ACCEDE A MEMORIA NO DEFINIDA!!!!!!!!!
 
     while( fgets(readText, MAXCHAR, file) != NULL ){
-        stationId = atoi(strtok(readText, ";"));
         token = strtok(NULL, ";");
         if(token != NULL){
             stationName = malloc((strlen(token)+1)); // * sizeof(char)
@@ -135,9 +134,10 @@ void readName(bikeSharingADT bikesh, const char * filename){
             exit(TOKERR);
         }
         strtok(NULL, ";");//Salteo Latitud 
-        strtok(NULL, "\n"); //y longitud.
+        strtok(NULL, ";"); //y longitud.
+        stationId = atoi(strtok(readText, "\n"));
         
-        bikesh = stringcpy(bikesh, stationName, stationId);
+        bikesh = stringcpyNYC(bikesh, stationName, stationId);
         
         if (bikesh == NULL){ 
             fprintf(stderr, "Memory Error");
@@ -157,15 +157,15 @@ void query1(bikeSharingADT bikesh){
 
     tripSort(bikesh);
 
-    FILE * query1File = newFile("Query1.csv");
+    FILE * query1File = newFile("Query1NYC.csv");
     if(query1File==NULL){
-        fprintf(stderr,"Error al crear archivo Query1\n");
+        fprintf(stderr,"Error al crear archivo Query1NYC\n");
         exit(CRERR);
     }
 
     fputs("Station;StartedTrips\n",query1File);
 
-    htmlTable table = newTable("Query1.html", 2, "Station", "StartedTrips");
+    htmlTable table = newTable("Query1NYC.html", 2, "Station", "StartedTrips");
 
     char aux[STATION_ID_LENGHT];
 

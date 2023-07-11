@@ -45,6 +45,10 @@ void roundTripSort(bikeSharingADT bikesh);
 
 size_t getRoundTrip(bikeSharingADT bikesh, int pos);
 
+bikeSharingADT stringcpyNYC(bikeSharingADT bikesh, char * stationName, size_t stationId);
+
+void addStationNYC(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate, size_t station2Id);
+
 enum errors{OK = 0, ARERR, OPENERR, CRERR, MEMERR, TOKERR, NEXERR};
 /* Los errores se definen de la siguiente manera:
     ARERR = Error en la cantidad de argumentos.
