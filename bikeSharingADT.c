@@ -5,6 +5,7 @@
 #include <ctype.h>
 
 typedef struct stationData{
+    lista de viaje a x estacion
     char * stationName;
     size_t memberTrips;
     size_t stationId; // Id de estacion de salida

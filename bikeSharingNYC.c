@@ -28,8 +28,8 @@ int main( int argc, char * argv[] ){
     bikeSharingADT bikesh = readAddCsv(argv[1]);
     readName(bikesh, argv[2]);
 
+    query2(bikesh);
     query1(bikesh);
-   // query2(bikesh);
     query3(bikesh);
     //query4(bikesh);
 
