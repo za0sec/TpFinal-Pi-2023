@@ -3,6 +3,7 @@
 #include "lib/htmlTable.h"
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 void query1(bikeSharingADT bikesh);
 
@@ -12,7 +13,7 @@ void query3(bikeSharingADT bikesh);
 
 void query4(bikeSharingADT bikesh);
 
-bikeSharingADT readAddCsv(const char * filename);
+bikeSharingADT readAddCsv(const char * filename, size_t yearFrom, size_t yearTo);
 
 void readName(bikeSharingADT bikesh, const char * filename);
 
@@ -20,25 +21,47 @@ FILE * newFile(const char * filename);
 
 int main( int argc, char * argv[] ){
 
-    if (argc != 3){
-        fprintf(stderr, "Arguments should be 2");
+size_t yearFrom=0, yearTo=0;
+
+    if (argc > 5 || argc < 3){
+        fprintf(stderr, "Invalid arguments\n");
         exit(ARERR);
     }
 
-    bikeSharingADT bikesh = readAddCsv(argv[1]);
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    int year = tm.tm_year+1900;
+
+    if( argc == 3 ){
+        yearFrom = 0;
+        yearTo = year;
+    }else if( argc == 4 ){
+        yearFrom = atoi(argv[3]);
+        yearTo = year;
+    }else if( argc == 5 ){
+        yearFrom = atoi(argv[3]);
+        yearTo = atoi(argv[4]);
+    }
+    
+    if( yearFrom > yearTo ){
+        fprintf(stderr, "Invalid year arguments\n");
+        exit(ARERR);
+    }
+
+    bikeSharingADT bikesh = readAddCsv(argv[1], yearFrom, yearTo);
     readName(bikesh, argv[2]);
 
-    query2(bikesh);
+    //query2(bikesh);
     query1(bikesh);
+    query4(bikesh);
     query3(bikesh);
-    //query4(bikesh);
 
     freeADT(bikesh);
 
     return 0;
 }
 
-bikeSharingADT readAddCsv(const char * filename){
+bikeSharingADT readAddCsv(const char * filename, size_t yearFrom, size_t yearTo){
  
     FILE * file = fopen(filename, "rt");
         if(file == NULL){
@@ -61,7 +84,6 @@ bikeSharingADT readAddCsv(const char * filename){
     // 2022-11-17 19:05:10.000000;489509;2022-11-17 19:07:30.000000;490309;classic_bike;member
     // 2022-11-13 13:42:35.000000;702804;2022-11-13 14:24:49.000000;808505;classic_bike;casual
  
- 
     char * startDate;
     size_t station1Id;
     size_t station2Id;
@@ -75,6 +97,7 @@ bikeSharingADT readAddCsv(const char * filename){
             startDate = malloc(strlen(token) + 1);
             if (startDate != NULL) {
                 strcpy(startDate, token);
+                printf("%s  ||  ", startDate);
             } else {
                 fprintf(stderr, "Memory Error\n");
                 exit(MEMERR);
@@ -90,7 +113,7 @@ bikeSharingADT readAddCsv(const char * filename){
         strtok(NULL, ";"); // rideable type
         isMember = strtok(NULL, "\n")[0] == 'm' ? 1 : 0; //Quiero solo el primer caracter. Si es una m quiere decir que es miembro y sino no.
  
-        addStation(bikesh, station1Id, isMember, startDate, station2Id);
+        addStation(bikesh, station1Id, isMember, startDate, station2Id, yearFrom, yearTo);
       //  addMatrix(bikesh, station1Id, station2Id, &flagError);
         if (flagError == MEMERR){    
             fprintf(stderr, "Memory Error");
@@ -228,6 +251,8 @@ void query2(bikeSharingADT bikesh){
 }
 
 void query3(bikeSharingADT bikesh){
+
+    sortAlpha(bikesh);
 
     FILE * query3File = newFile("out/Query3NYC.csv");
     if(query3File==NULL){

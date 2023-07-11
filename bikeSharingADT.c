@@ -78,14 +78,13 @@ static int compareRoundTrips(const void *a, const void *b){
 }
 
 static int getMonth(const char * startDate){
-   
+    
     char monthStr[3];
 
     strncpy(monthStr, &startDate[5], 2);
     monthStr[2] = '\0';
 
     int month = atoi(monthStr);
-
     return month;
 }
 
@@ -127,6 +126,7 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char 
     if(isMember)
         bikesh->rankingStations[station1Id-1].memberTrips++;
    
+    printf("%d", getMonth(startDate));
     bikesh->rankingStations[station1Id-1].vecMonths[getMonth(startDate)-1]++;
 
     if((station1Id == station2Id) && (getYear(startDate) >= yearFrom) && (getYear(startDate) <= yearTo)){
@@ -228,11 +228,12 @@ size_t getTripsAB(bikeSharingADT bikesh, int i, int j){
 }
 
 size_t getMonthTrip(bikeSharingADT bikesh, size_t stationId, size_t month){
+    //printf("%ld || ", bikesh->rankingStations[stationId].vecMonths[month]);
+
     return bikesh->rankingStations[stationId].vecMonths[month];
 }
 
 void roundTripSort(bikeSharingADT bikesh){
-
     qsort(bikesh->rankingStations, bikesh->realDim, sizeof(stationData), compareRoundTrips);
 
 }
