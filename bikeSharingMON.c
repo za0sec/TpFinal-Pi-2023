@@ -163,7 +163,7 @@ void query1(bikeSharingADT bikesh){
 
     htmlTable table = newTable("Query1.html", 2, "Station", "StartedTrips");
 
-    char aux[STATION_ID];
+    char aux[STATION_ID_LENGHT];
 
     for(int i = 0; i < getRealDim(bikesh); i++) {
         sprintf(aux, "%ld", getMemberTrips(bikesh, i));
@@ -184,6 +184,8 @@ void query1(bikeSharingADT bikesh){
 
 void query2(bikeSharingADT bikesh){
 
+    sortAlpha(bikesh);
+
     FILE * query2File = newFile("Query2.csv");
     if(query2File==NULL){
         fprintf(stderr,"Error al crear archivo Query2\n");
@@ -194,8 +196,8 @@ void query2(bikeSharingADT bikesh){
 
     htmlTable table = newTable("Query2.html", 4, "StationA", "StationB", "Trips A->B", "Trips B->A");
 
-    char ab[10];
-    char ba[10];
+    char ab[TRIP_LENGHT];
+    char ba[TRIP_LENGHT];
 
     for(int i = 0; i < getRealDim(bikesh); i++) { // Faltan frees
         char * station1Name = getStationName(bikesh, i);

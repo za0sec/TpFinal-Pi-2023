@@ -4,7 +4,8 @@
 #define MAXCHAR 150
 #define TOTAL_MONTHS 12
 #define CHUNK 20
-#define STATION_ID 10
+#define STATION_ID_LENGHT 10
+#define TRIPS_LENGHT 10
 
 #define MAX_SIZE(a,b) ( ((a) > (b)) ? (a) : (b) )
 
