@@ -22,17 +22,19 @@ typedef struct bikeSharingCDT{
 
 
 //Funcion compare para tener un criterio de comparacion.
-int compare(const void *a, const void *b){
+static int compare(const void *a, const void *b, size_t flag){
     stationData *station1 = (stationData *)a;
     stationData *station2 = (stationData *)b;
 
     int cmp = 0;
 
-    //Me fijo si el primero tiene menor cantidad de viajes o si tienen igual cantidad y son distintos lexicograficamente.
-    if (station1->memberTrips < station2->memberTrips){
-        cmp = 1;
-    } else if (station1->memberTrips > station2->memberTrips){
-        cmp = -1;
+    if (flag = 1){
+        //Me fijo si el primero tiene menor cantidad de viajes o si tienen igual cantidad y son distintos lexicograficamente.
+        if (station1->memberTrips < station2->memberTrips){
+            cmp = 1;
+        } else if (station1->memberTrips > station2->memberTrips){
+            cmp = -1;
+        }
     }
 
     if (!cmp)
@@ -169,7 +171,7 @@ void addMatrix(bikeSharingADT bikesh, size_t station1Id, size_t station2Id, size
 // Ordena la matriz por orden alfabetico
 void sortAlpha(bikeSharingADT bikesh){
 
-    qsort(bikesh->rankingStations, bikesh->realDim, sizeof(stationData), strcasecmp);
+    qsort(bikesh->rankingStations, bikesh->realDim, sizeof(stationData), compare);
 
 }
 

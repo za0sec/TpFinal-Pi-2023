@@ -194,19 +194,19 @@ void query2(bikeSharingADT bikesh){
 
     htmlTable table = newTable("Query2.html", 4, "StationA", "StationB", "Trips A->B", "Trips B->A");
 
-    size_t ab, ba;
+    char ab[10];
+    char ba[10];
 
     for(int i = 0; i < getRealDim(bikesh); i++) { // Faltan frees
         char * station1Name = getStationName(bikesh, i);
         for(int j = i+1; j < getRealDim(bikesh); j++){
             char * station2Name = getStationName(bikesh, j);
-            ab = getTripsAB(bikesh, i, j);
-            ba = getTripsAB(bikesh, j, i);
-
-            sprintf(station1Name, station2Name, ab, ba);
-            fprintf(query2File, "%s;%s;%ld;%ld\n", station1Name, station2Name, ab, ba);
-            addHTMLRow(table, station1Name, station2Name, ab, ba);
-
+            sprintf(ab, "%ld", getTripsAB(bikesh, i, j));
+            sprintf(ba, "%ld", getTripsAB(bikesh, j, i));
+            if (ab[0] != '0' && ba[0] != '0'){
+                fprintf(query2File, "%s;%s;%s;%s\n", station1Name, station2Name, ab, ba);
+                addHTMLRow(table, station1Name, station2Name, ab, ba);
+            }
             free(station2Name);
         }
         free(station1Name);

@@ -16,8 +16,6 @@ bikeSharingADT newBikeSharing(void);
 // Agrega un nodo a la lista
 void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember);
 
-bikeSharingADT addInfo(bikeSharingADT bikesh, char * startDate, size_t station1Id, char * endDate, size_t station2Id, size_t isMember, char * rideableType);
-
 void tripSort(bikeSharingADT bikesh);
 
 size_t getRealDim(bikeSharingADT bikesh);
