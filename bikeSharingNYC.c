@@ -30,8 +30,8 @@ int main( int argc, char * argv[] ){
 
     query1(bikesh);
     query2(bikesh);
-    query3(bikesh);
-   // query4(bikesh);
+    //query3(bikesh);
+    query4(bikesh);
 
     freeADT(bikesh);
 
@@ -39,36 +39,36 @@ int main( int argc, char * argv[] ){
 }
 
 bikeSharingADT readAddCsv(const char * filename){
-
+ 
     FILE * file = fopen(filename, "rt");
         if(file == NULL){
             fprintf(stderr, "Error opening file %s\n", filename);
             exit(OPENERR);
         }
-
+ 
     bikeSharingADT bikesh = newBikeSharing();
     if( bikesh == NULL ){
         fprintf(stderr, "51Memory Error\n");
         exit(MEMERR);
     }
-
+ 
     char readText[MAXCHAR];
-
+ 
     fscanf(file, "%s\n", readText); /* salta la primer linea */
-
+ 
     // example
     // started_at;start_station_id;ended_at;end_station_id;rideable_type;member_casual
     // 2022-11-17 19:05:10.000000;489509;2022-11-17 19:07:30.000000;490309;classic_bike;member
     // 2022-11-13 13:42:35.000000;702804;2022-11-13 14:24:49.000000;808505;classic_bike;casual
-
-
+ 
+ 
     char * startDate;
     size_t station1Id;
     size_t station2Id;
     //char member[2];
     size_t isMember;
     size_t flagError = 0;
-
+ 
     while( fgets(readText, MAXCHAR, file) != NULL ){
         char* token = strtok(readText, ";");
         if (token != NULL) {
@@ -83,27 +83,32 @@ bikeSharingADT readAddCsv(const char * filename){
             fprintf(stderr, "Null Token Error\n");
             exit(TOKERR);
         }
-        
+ 
         station1Id = atoi(strtok(NULL, ";"));
         strtok(NULL, ";"); // ended at
         station2Id = atoi(strtok(NULL, ";")); 
         strtok(NULL, ";"); // rideable type
         isMember = strtok(NULL, "\n")[0] == 'm' ? 1 : 0; //Quiero solo el primer caracter. Si es una m quiere decir que es miembro y sino no.
-
+ 
         addStation(bikesh, station1Id, isMember, startDate, station2Id);
-
+        addMatrix(bikesh, station1Id, station2Id, &flagError);
+        if (flagError == MEMERR){    
+            fprintf(stderr, "Memory Error");
+            exit(MEMERR);
+        }
+ 
         free(startDate);
-
+ 
         //vamos a tener q poner otra funcion  para los otros queries
     }
-
-
+ 
+ 
     fclose(file);
-   
+ 
     return bikesh;
-    
+ 
 }
-
+ 
 void readName(bikeSharingADT bikesh, const char * filename){
     FILE * file = fopen(filename, "rt");
         if(file == NULL){
@@ -111,15 +116,15 @@ void readName(bikeSharingADT bikesh, const char * filename){
             exit(OPENERR);
         }
     char readText[MAXCHAR];
-
+ 
     fscanf(file, "%s\n", readText); /* salta la primer linea */
-
+ 
     size_t stationId;
     char * token;
     char * stationName;
-
+ 
 // EL ERROR ESTA EN ESTA FUNCION AL TRATAR DE LEER ARCHIVOS Y ACCEDE A MEMORIA NO DEFINIDA!!!!!!!!!
-
+ 
     while( fgets(readText, MAXCHAR, file) != NULL ){
         token = strtok(readText, ";");
         if(token != NULL){
@@ -137,20 +142,20 @@ void readName(bikeSharingADT bikesh, const char * filename){
         strtok(NULL, ";");//Salteo Latitud 
         strtok(NULL, ";"); //y longitud.
         stationId = atoi(strtok(NULL, "\n"));
-        
+ 
         bikesh = stringcpy(bikesh, stationName, stationId);
-        
+ 
         if (bikesh == NULL){ 
             fprintf(stderr, "143Memory Error\n");
             exit(MEMERR);
         } //copia en nuestro vector ordenado por stationIds, el nombre de la estación.
-
+ 
         free(stationName);
-
+ 
     }
-
+ 
     fclose(file);
-
+ 
 }
 
 //QUERY 1: INICIO DE VIAJES DE MIEMBROS POR ESTACION ORDENADOS DE MAYOR A MENOR
@@ -158,15 +163,15 @@ void query1(bikeSharingADT bikesh){
 
     tripSort(bikesh);
 
-    FILE * query1File = newFile("Query1NYC.csv");
+    FILE * query1File = newFile("out/Query1NYC.csv");
     if(query1File==NULL){
-        fprintf(stderr,"Error al crear archivo Query1NYC\n");
+        fprintf(stderr,"Error al crear archivo out/Query1NYC\n");
         exit(CRERR);
     }
 
     fputs("Station;StartedTrips\n",query1File);
 
-    htmlTable table = newTable("Query1NYC.html", 2, "Station", "StartedTrips");
+    htmlTable table = newTable("out/Query1NYC.html", 2, "Station", "StartedTrips");
 
     char aux[STATION_ID_LENGHT];
 
@@ -188,7 +193,7 @@ void query2(bikeSharingADT bikesh){
 
     sortAlpha(bikesh);
 
-    FILE * query2File = newFile("Query2NYC.csv");
+    FILE * query2File = newFile("out/Query2NYC.csv");
     if(query2File==NULL){
         fprintf(stderr,"Error al crear archivo Query2NYC\n");
         exit(CRERR);
@@ -196,7 +201,7 @@ void query2(bikeSharingADT bikesh){
 
     fputs("StationA;StationB;Trips A->B; Trips B->A\n",query2File);
 
-    htmlTable table = newTable("Query2NYC.html", 4, "StationA", "StationB", "Trips A->B", "Trips B->A");
+    htmlTable table = newTable("out/Query2.htmlNYC", 4, "StationA", "StationB", "Trips A->B", "Trips B->A");
 
     char ab[TRIPS_LENGHT];
     char ba[TRIPS_LENGHT];
@@ -224,7 +229,7 @@ void query2(bikeSharingADT bikesh){
                                     // EN LOS MESES 1 2 3 y 12 NO HAY VIAJES
 void query3(bikeSharingADT bikesh){
 
-    FILE * query3File = newFile("Query3NYC.csv");
+    FILE * query3File = newFile("out/Query3NYC.csv");
     if(query3File==NULL){
         fprintf(stderr,"Error al crear archivo Query3NYC\n");
         exit(CRERR);
@@ -232,7 +237,7 @@ void query3(bikeSharingADT bikesh){
 
     fputs("J;F;M;A;M;J;J;A;S;O;N;D;Station\n",query3File);
 
-    htmlTable table = newTable("Query3NYC.html", 13, "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D", "Station");
+    htmlTable table = newTable("out/Query3NYC.html", 13, "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D", "Station");
     
     char monthStrings[TOTAL_MONTHS][MONTHS_LENGTH];
 
@@ -265,15 +270,15 @@ void query4(bikeSharingADT bikesh){
 
     roundTripSort(bikesh);
 
-    FILE * query4File = newFile("Query4NYC.csv");
+    FILE * query4File = newFile("out/Query4NYC.csv");
     if(query4File==NULL){
-        fprintf(stderr,"Error al crear archivo Query4\n");
+        fprintf(stderr,"Error al crear archivo Query4NYC\n");
         exit(CRERR);
     }
 
     fputs("Station;RoundingTrips\n",query4File);
 
-    htmlTable table = newTable("Query4NYC.html", 2, "Station", "RoundingTrips");
+    htmlTable table = newTable("out/Query4NYC.html", 2, "Station", "RoundingTrips");
 
     char roundTrip[TRIPS_LENGHT];
 

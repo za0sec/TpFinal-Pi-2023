@@ -159,15 +159,15 @@ void query1(bikeSharingADT bikesh){
 
     tripSort(bikesh);
 
-    FILE * query1File = newFile("Query1.csv");
+    FILE * query1File = newFile("out/Query1MON.csv");
     if(query1File==NULL){
-        fprintf(stderr,"Error al crear archivo Query1\n");
+        fprintf(stderr,"Error al crear archivo out/Query1MON\n");
         exit(CRERR);
     }
 
     fputs("Station;StartedTrips\n",query1File);
 
-    htmlTable table = newTable("Query1.html", 2, "Station", "StartedTrips");
+    htmlTable table = newTable("out/Query1MON.html", 2, "Station", "StartedTrips");
 
     char aux[STATION_ID_LENGHT];
 
@@ -189,15 +189,15 @@ void query2(bikeSharingADT bikesh){
 
     sortAlpha(bikesh);
 
-    FILE * query2File = newFile("Query2.csv");
+    FILE * query2File = newFile("out/Query2MON.csv");
     if(query2File==NULL){
-        fprintf(stderr,"Error al crear archivo Query2\n");
+        fprintf(stderr,"Error al crear archivo Query2MON\n");
         exit(CRERR);
     }
 
     fputs("StationA;StationB;Trips A->B; Trips B->A\n",query2File);
 
-    htmlTable table = newTable("Query2.html", 4, "StationA", "StationB", "Trips A->B", "Trips B->A");
+    htmlTable table = newTable("out/Query2.htmlMON", 4, "StationA", "StationB", "Trips A->B", "Trips B->A");
 
     char ab[TRIPS_LENGHT];
     char ba[TRIPS_LENGHT];
@@ -225,15 +225,15 @@ void query2(bikeSharingADT bikesh){
                                     // EN LOS MESES 1 2 3 y 12 NO HAY VIAJES
 void query3(bikeSharingADT bikesh){
 
-    FILE * query3File = newFile("Query3.csv");
+    FILE * query3File = newFile("out/Query3MON.csv");
     if(query3File==NULL){
-        fprintf(stderr,"Error al crear archivo Query3\n");
+        fprintf(stderr,"Error al crear archivo Query3MON\n");
         exit(CRERR);
     }
 
     fputs("J;F;M;A;M;J;J;A;S;O;N;D;Station\n",query3File);
 
-    htmlTable table = newTable("Query3.html", 13, "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D", "Station");
+    htmlTable table = newTable("out/Query3MON.html", 13, "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D", "Station");
     
     char monthStrings[TOTAL_MONTHS][MONTHS_LENGTH];
 
@@ -266,15 +266,15 @@ void query4(bikeSharingADT bikesh){
 
     roundTripSort(bikesh);
 
-    FILE * query4File = newFile("Query4.csv");
+    FILE * query4File = newFile("out/Query4MON.csv");
     if(query4File==NULL){
-        fprintf(stderr,"Error al crear archivo Query4\n");
+        fprintf(stderr,"Error al crear archivo Query4MON\n");
         exit(CRERR);
     }
 
     fputs("Station;RoundingTrips\n",query4File);
 
-    htmlTable table = newTable("Query4.html", 2, "Station", "RoundingTrips");
+    htmlTable table = newTable("out/Query4MON.html", 2, "Station", "RoundingTrips");
 
     char roundTrip[TRIPS_LENGHT];
 

@@ -86,6 +86,8 @@ static int getMonth(const char * startDate){
     monthStr[2] = '\0';
 
     int month = atoi(monthStr);
+    
+    printf("%d", month);
 
     return month;
 }
@@ -115,7 +117,7 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char 
 
     if(isMember)
         bikesh->rankingStations[station1Id-1].memberTrips++;
-    
+   
     bikesh->rankingStations[station1Id-1].vecMonths[getMonth(startDate)-1]++;
 
     if(station1Id == station2Id)
@@ -216,6 +218,7 @@ size_t getTripsAB(bikeSharingADT bikesh, int i, int j){
 }
 
 size_t getMonthTrip(bikeSharingADT bikesh, size_t stationId, size_t month){
+    printf("%ld ", month);
     return bikesh->rankingStations[stationId].vecMonths[month];
 }
 
