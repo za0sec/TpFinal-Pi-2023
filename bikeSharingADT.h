@@ -45,13 +45,14 @@ void roundTripSort(bikeSharingADT bikesh);
 
 size_t getRoundTrip(bikeSharingADT bikesh, int pos);
 
-enum errors{OK = 0, ARERR, OPENERR, CRERR, MEMERR, TOKERR};
+enum errors{OK = 0, ARERR, OPENERR, CRERR, MEMERR, TOKERR, NEXERR};
 /* Los errores se definen de la siguiente manera:
     ARERR = Error en la cantidad de argumentos.
     OPENERR = Error al abrir un archivo.
     CRERR = Error al crear el archivo.
     MEMERR = Error de creacion de memoria.
     TOKERR = Error de token nulo.
+    NEXERR = Error al chequear si hay un proximo en el iterador.
 */
 
 

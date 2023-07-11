@@ -64,7 +64,6 @@ bikeSharingADT readAddCsv(const char * filename){
     char * startDate;
     size_t station1Id;
     size_t station2Id;
-    //char member[2];
     size_t isMember;
     size_t flagError = 0;
 
@@ -82,14 +81,17 @@ bikeSharingADT readAddCsv(const char * filename){
             fprintf(stderr, "Null Token Error");
             exit(TOKERR);
         }
-        
         station1Id = atoi(strtok(NULL, ";"));
         strtok(NULL, ";");
         station2Id = atoi(strtok(NULL, ";")); 
-        strtok(NULL, ";");
-        strtok(NULL, "\n")[0] == 'm' ? isMember = 1 : isMember = 0; //Quiero solo el primer caracter. Si es una m quiere decir que es miembro y sino no.
+        isMember = atoi(strtok(NULL, "\n"));
 
-
+        addStation(bikesh, station1Id, isMember, startDate, station2Id);
+        addMatrix(bikesh, station1Id, station2Id, &flagError);
+        if (flagError == MEMERR){    
+            fprintf(stderr, "Memory Error");
+            exit(MEMERR);
+        }
 
         free(startDate);
 

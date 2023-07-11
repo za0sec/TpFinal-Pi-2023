@@ -4,6 +4,23 @@
 #include <string.h>
 #include <ctype.h>
 
+typedef struct node * TList;
+
+typedef struct element{
+    char * stationName;
+    size_t memberTrips;
+    size_t stationId; // Id de estacion de salida
+    size_t used;
+    size_t vecMonths[TOTAL_MONTHS]; //todavia no lo usamos, cuando lleguemos al query 3
+    size_t roundTrips;
+}element;
+
+typedef struct node{
+
+    element elem;
+    struct * node tail;
+
+}TNode;
 
 typedef struct stationData{
     char * stationName;
@@ -15,12 +32,17 @@ typedef struct stationData{
 }stationData;
 
 typedef struct bikeSharingCDT{
+    TList first; //Lista para guardar los datos de NYC
+    TList iterator;  //Iterador al siguiente.
     stationData * rankingStations;
-    size_t dim; //Dimension de todas las stations sin usar y usadas.
-    size_t realDim; //Dimension solo de las stations usadas.
+    size_t dim; //Dimension de todas las stations sin usar y usadas. ---- Para NYC es la dimension de la lista.
+    size_t realDim; //Dimension solo de las stations usadas. ---- PARA NYC no existe.
     size_t ** mat; // Matriz de adyacencia
     size_t dimMat; // Filas y columnas de la matriz ( es cuadrada ) 
 }bikeSharingCDT;
+
+
+/* -----------------------------------------------------------------------BikesharingMON-------------------------------------------------------------------------------- */
 
 static int my_strcasecmp(const char *s1, const char *s2)
 {
@@ -75,9 +97,6 @@ static int compareRoundTrips(const void *a, const void *b){
 
 }
 
-bikeSharingADT newBikeSharing(void){
-    return calloc(1, sizeof(bikeSharingCDT));
-}
 
 static int getMonth(const char * startDate){
    
@@ -271,3 +290,43 @@ void freeADT(bikeSharingADT bikesh){
 
 
 }
+
+
+/*----------------------------------------------------------------------- Funciones que comparten -----------------------------------------------------------------------*/
+
+bikeSharingADT newBikeSharing(void){
+    return calloc(1, sizeof(bikeSharingCDT));
+}
+
+
+/* -----------------------------------------------------------------------BikesharingNYC-------------------------------------------------------------------------------- */
+
+
+bikeSharingADT addData(bikeSharingADT bikesh){
+
+
+
+}
+
+
+void toBegin(bikeSharingADT bikesh){
+    bikesh->iterator = bikesh->first;
+}
+
+size_t hasNext(bikeSharingADT bikesh){
+
+    return bikesh->iterator != NULL;
+
+}
+
+element next(bikeSharingADT bikesh){
+   if (hasNext(bikesh)){
+        element aux = bikesh->iterator->elem;
+        bikesh->iterator = bikesh->iterator->tail;
+        return aux;
+    }
+
+    exit(NEXERR);
+}
+
+
