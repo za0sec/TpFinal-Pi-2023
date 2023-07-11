@@ -4,23 +4,6 @@
 #include <string.h>
 #include <ctype.h>
 
-// typedef struct node * TList;
-
-// typedef struct element{
-//     char * stationName;
-//     size_t memberTrips;
-//     size_t stationId; // Id de estacion de salida
-//     size_t vecMonths[TOTAL_MONTHS];
-//     size_t roundTrips;
-// }element;
-
-// typedef struct node{
-
-//     element elem;
-//     struct * node tail;
-
-// }TNode;
-
 typedef struct stationData{
     char * stationName;
     size_t memberTrips;

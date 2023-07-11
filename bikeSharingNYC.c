@@ -48,7 +48,7 @@ bikeSharingADT readAddCsv(const char * filename){
 
     bikeSharingADT bikesh = newBikeSharing();
     if( bikesh == NULL ){
-        fprintf(stderr, "Memory Error");
+        fprintf(stderr, "Memory Error\n");
         exit(MEMERR);
     }
 
@@ -75,11 +75,11 @@ bikeSharingADT readAddCsv(const char * filename){
             if (startDate != NULL) {
                 strcpy(startDate, token);
             } else {
-                fprintf(stderr, "Memory Error");
+                fprintf(stderr, "Memory Error\n");
                 exit(MEMERR);
             }
         } else {
-            fprintf(stderr, "Null Token Error");
+            fprintf(stderr, "Null Token Error\n");
             exit(TOKERR);
         }
         
@@ -120,27 +120,27 @@ void readName(bikeSharingADT bikesh, const char * filename){
 // EL ERROR ESTA EN ESTA FUNCION AL TRATAR DE LEER ARCHIVOS Y ACCEDE A MEMORIA NO DEFINIDA!!!!!!!!!
 
     while( fgets(readText, MAXCHAR, file) != NULL ){
-        token = strtok(NULL, ";");
+        token = strtok(readText, ";");
         if(token != NULL){
             stationName = malloc((strlen(token)+1)); // * sizeof(char)
             if(stationName != NULL){
                 strcpy(stationName, token);
             }else{
-                fprintf(stderr, "Memory Error");
+                fprintf(stderr, "Memory Error\n");
                 exit(MEMERR);
             }
         }else{
-            fprintf(stderr, "Null Token Error");
+            fprintf(stderr, "Null Token Error\n");
             exit(TOKERR);
         }
         strtok(NULL, ";");//Salteo Latitud 
         strtok(NULL, ";"); //y longitud.
-        stationId = atoi(strtok(readText, "\n"));
+        stationId = atoi(strtok(NULL, "\n"));
         
         bikesh = stringcpyNYC(bikesh, stationName, stationId);
         
         if (bikesh == NULL){ 
-            fprintf(stderr, "Memory Error");
+            fprintf(stderr, "Memory Error\n");
             exit(MEMERR);
         } //copia en nuestro vector ordenado por stationIds, el nombre de la estación.
 
