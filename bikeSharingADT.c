@@ -160,17 +160,17 @@ char * getStationName(bikeSharingADT bikesh, int pos){
     return copyStr(bikesh->rankingStations[pos].stationName);
 }
 
-bikeSharingADT stringcpy(bikeSharingADT bikesh, char * from, size_t stationId){
 
-    bikesh->rankingStations[stationId-1].stationName = realloc(bikesh->rankingStations[stationId-1].stationName, (strlen(from)+1) * sizeof(char));
-    if (bikesh->rankingStations[stationId-1].stationName == NULL){
+bikeSharingADT stringcpy(bikeSharingADT bikesh, char * from, size_t stationId){
+    char* temp = realloc(bikesh->rankingStations[stationId-1].stationName, (strlen(from)+1) * sizeof(char));
+    if (temp == NULL){
         return NULL;
     }
     
+    bikesh->rankingStations[stationId-1].stationName = temp;
     strcpy(bikesh->rankingStations[stationId-1].stationName, from); 
 
     return bikesh;
-
 }
 
 void addMatrix(bikeSharingADT bikesh, size_t station1Id, size_t station2Id, size_t * flagError){ // Crea la matriz de adyacencia
