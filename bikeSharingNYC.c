@@ -51,10 +51,10 @@ size_t yearFrom=0, yearTo=0;
     bikeSharingADT bikesh = readAddCsv(argv[1], yearFrom, yearTo);
     readName(bikesh, argv[2]);
 
-    //query2(bikesh);
     query1(bikesh);
-    query4(bikesh);
+    //query2(bikesh);
     query3(bikesh);
+    query4(bikesh);
 
     freeADT(bikesh);
 
@@ -90,14 +90,14 @@ bikeSharingADT readAddCsv(const char * filename, size_t yearFrom, size_t yearTo)
     //char member[2];
     size_t isMember;
     size_t flagError = 0;
+    char * token;
  
     while( fgets(readText, MAXCHAR, file) != NULL ){
-        char* token = strtok(readText, ";");
+        token = strtok(readText, ";");
         if (token != NULL) {
             startDate = malloc(strlen(token) + 1);
             if (startDate != NULL) {
                 strcpy(startDate, token);
-                printf("%s  ||  ", startDate);
             } else {
                 fprintf(stderr, "Memory Error\n");
                 exit(MEMERR);
@@ -114,7 +114,7 @@ bikeSharingADT readAddCsv(const char * filename, size_t yearFrom, size_t yearTo)
         isMember = strtok(NULL, "\n")[0] == 'm' ? 1 : 0; //Quiero solo el primer caracter. Si es una m quiere decir que es miembro y sino no.
  
         addStation(bikesh, station1Id, isMember, startDate, station2Id, yearFrom, yearTo);
-      //  addMatrix(bikesh, station1Id, station2Id, &flagError);
+        //addMatrix(bikesh, station1Id, station2Id, &flagError);
         if (flagError == MEMERR){    
             fprintf(stderr, "Memory Error");
             exit(MEMERR);
@@ -146,7 +146,6 @@ void readName(bikeSharingADT bikesh, const char * filename){
     char * token;
     char * stationName;
  
-// EL ERROR ESTA EN ESTA FUNCION AL TRATAR DE LEER ARCHIVOS Y ACCEDE A MEMORIA NO DEFINIDA!!!!!!!!!
  
     while( fgets(readText, MAXCHAR, file) != NULL ){
         token = strtok(readText, ";");
@@ -166,12 +165,12 @@ void readName(bikeSharingADT bikesh, const char * filename){
         strtok(NULL, ";"); //y longitud.
         stationId = atoi(strtok(NULL, "\n"));
  
-        bikesh = stringcpy(bikesh, stationName, stationId);
+        bikesh = stringcpy(bikesh, stationName, stationId); //copia en nuestro vector ordenado por stationIds, el nombre de la estación.
  
         if (bikesh == NULL){ 
             fprintf(stderr, "Memory Error\n");
             exit(MEMERR);
-        } //copia en nuestro vector ordenado por stationIds, el nombre de la estación.
+        }
  
         free(stationName);
  

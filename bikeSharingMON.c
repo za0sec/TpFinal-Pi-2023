@@ -96,7 +96,6 @@ bikeSharingADT readAddCsv(const char * filename, size_t yearFrom, size_t yearTo)
             startDate = malloc(strlen(token) + 1);
             if (startDate != NULL) {
                 strcpy(startDate, token);
-                printf("%s  ||  ", startDate);
             } else {
                 fprintf(stderr, "Memory Error");
                 exit(MEMERR);

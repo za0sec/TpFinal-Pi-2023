@@ -78,11 +78,13 @@ static int compareRoundTrips(const void *a, const void *b){
 }
 
 static int getMonth(const char * startDate){
-    
+   
+
     char monthStr[3];
 
     strncpy(monthStr, &startDate[5], 2);
     monthStr[2] = '\0';
+
 
     int month = atoi(monthStr);
     return month;
@@ -126,7 +128,7 @@ void addStation(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char 
     if(isMember)
         bikesh->rankingStations[station1Id-1].memberTrips++;
    
-    printf("%d", getMonth(startDate));
+
     bikesh->rankingStations[station1Id-1].vecMonths[getMonth(startDate)-1]++;
 
     if((station1Id == station2Id) && (getYear(startDate) >= yearFrom) && (getYear(startDate) <= yearTo)){
@@ -280,7 +282,12 @@ void tripSort(bikeSharingADT bikesh){
             free(bikesh->rankingStations[k].stationName);  // liberar la cadena original
             bikesh->rankingStations[k].stationName = copyStr(bikesh->rankingStations[i].stationName);
             bikesh->rankingStations[k].memberTrips = bikesh->rankingStations[i].memberTrips;
-            bikesh->rankingStations[k++].stationId = i+1;
+            bikesh->rankingStations[k].stationId = i+1;
+            for(int j = 0; j < TOTAL_MONTHS; j++){
+                bikesh->rankingStations[k].vecMonths[j] = bikesh->rankingStations[i].vecMonths[j];
+            }
+            bikesh->rankingStations[k++].roundTrips = bikesh->rankingStations[i].roundTrips;
+
         }    
     }
     
@@ -347,60 +354,4 @@ void tripSort(bikeSharingADT bikesh){
 
 // }
 
-char * stationName;
-    size_t memberTrips;
-    size_t stationId; // Id de estacion de salida
-    // size_t used;
-    size_t vecMonths[TOTAL_MONTHS];
-    size_t roundTrips;
 
-void addStationNYC(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate, size_t station2Id){
-  
-    if (!(bikesh->realDim % CHUNK)){
-
-        bikesh->rankingStations = realloc(bikesh->rankingStations, ((bikesh->realDim)+CHUNK) * sizeof(stationData)); // Agrego memoria si es que el station dado es menor a dim
-      
-        for(int i=bikesh->realDim; i<(bikesh->realDim + CHUNK); i++){
-            bikesh->rankingStations[i].memberTrips = 0;
-            bikesh->rankingStations[i].stationName = NULL;
-            bikesh->rankingStations[i].stationId = 0;
-            bikesh->rankingStations[i].used = 0;
-            bikesh->rankingStations[i].roundTrips = 0;
-            for(int j = 0; j < TOTAL_MONTHS; j++){
-                bikesh->rankingStations[i].vecMonths[j] = 0;
-            }
-        }
-    }
-
-    bikesh->realDim++;
-    bikesh->dim = bikesh->realDim;
-    bikesh->rankingStations[bikesh->realDim - 1].stationId = station1Id;
-    bikesh->rankingStations[bikesh->realDim - 1].used = 1;
-    for(int j = 0; j < bikesh->realDim; j++){
-        if(bikesh->rankingStations[j].stationId == station1Id){
-            bikesh->rankingStations[j].memberTrips += isMember;
-            // bikesh->rankingStations[j].roundTrips += (station1Id == station2Id)? 1 : 0; QUERY 4?
-            return;
-        }
-    }
-
-    // bikesh->rankingStations[station1Id-1].vecMonths[getMonth(startDate)-1]++;
-    
-    // if(station1Id == station2Id)
-    //     bikesh->rankingStations[station1Id-1].roundTrips++;
-}
-
-
-bikeSharingADT stringcpyNYC(bikeSharingADT bikesh, char * from, size_t stationId){
-    for(int i = 0; i < bikesh->realDim; i++){
-        if(stationId == bikesh->rankingStations[i].stationId){
-            bikesh->rankingStations[i].stationName = realloc(bikesh->rankingStations[i].stationName, (strlen(from)+1) * sizeof(char));
-            if (bikesh->rankingStations[i].stationName == NULL){
-                return NULL;
-            }
-            strcpy(bikesh->rankingStations[i].stationName, from); 
-            return bikesh;
-        }
-    }
-    return bikesh;
-}
