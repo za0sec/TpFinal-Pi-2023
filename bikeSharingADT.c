@@ -15,9 +15,9 @@ typedef struct stationData{
 
 typedef struct bikeSharingCDT{
     stationData * rankingStations;
-    size_t dim; //Dimension de todas las stations sin usar y usadas. ---- Para NYC es la dimension de la lista.
-    size_t realDim; //Dimension solo de las stations usadas. ---- PARA NYC no existe.
-    size_t ** mat; // Matriz de adyacencia
+    size_t dim; //Dimension de todas las stations sin usar y usadas.
+    size_t realDim; //Dimension solo de las stations usadas.
+    size_t ** mat; // Matriz de adyacencia.
     size_t dimMat; // Filas y columnas de la matriz ( es cuadrada ) 
 }bikeSharingCDT;
 
@@ -144,10 +144,6 @@ static char * copyStr(const char * s){
     return strcpy(copy, s);
 }
 
-size_t getDim(bikeSharingADT bikesh){
-    return bikesh->dim;
-}
-
 size_t getRealDim(bikeSharingADT bikesh){
     return bikesh->realDim;
 }
@@ -265,9 +261,6 @@ void freeADT(bikeSharingADT bikesh){
 
 }
 
-
-/*----------------------------------------------------------------------- Funciones que comparten -----------------------------------------------------------------------*/
-
 bikeSharingADT newBikeSharing(void){
     return calloc(1, sizeof(bikeSharingCDT));
 }
@@ -296,62 +289,4 @@ void tripSort(bikeSharingADT bikesh){
     qsort(bikesh->rankingStations, bikesh->realDim, sizeof(stationData), compare);
 
 }
-
-/* -----------------------------------------------------------------------BikesharingNYC-------------------------------------------------------------------------------- */
-// static TList addDataRec(TList list, size_t station1Id, size_t isMember, char * startDate, size_t station2Id){
-//     if(list == NULL || list->elem.stationId > station1Id){
-//         TList aux = malloc(sizeof(TNode));
-//         aux->elem.stationId = station1Id;
-//         aux->elem.stationName = NULL;
-//         // aux->elem.roundTrips = (station1Id == station2Id) ? 1 : 0;
-//         aux->elem.memberTrips = isMember ? 1 : 0;
-//         for(int i = 0; i < TOTAL_MONTHS; i++){
-//             aux->elem.vecMonths[i] = 0;
-//         }
-//         return aux;
-//     }
-//     if(list->elem.stationId == station1Id){
-//         // list->elem.roundTrips += (station1Id == station2Id) ? 1 : 0; 
-//         list->elem.memberTrips += isMember ? 1 : 0;
-//         return list;
-//     }
-//     list->tail = addDataRec(list->tail, station1Id, isMember, startDate, station2Id);
-//     return list;
-// } //cargamos toda la data de todos los viajes en una lista ordenada por stationsIds.
-
-// bikeSharingADT addData(bikeSharingADT bikesh, size_t station1Id, size_t isMember, char * startDate, size_t station2Id){
-//     bikesh->first = addDataRec(bikesh->first, station1Id, isMember, startDate, station2Id);
-//     return bikesh;
-// }
-
-// static TList tripSortRec(bikeSharingADT bikesh){
-
-// }
-
-// bikeSharingADT tripSortNYC(bikeSharingADT bikesh){
-//     bikesh->first = tripSortRec(bikesh->first);
-//     return bikesh;
-// }
-
-// void toBegin(bikeSharingADT bikesh){
-//     bikesh->iterator = bikesh->first;
-// }
-
-// size_t hasNext(bikeSharingADT bikesh){
-//     return bikesh->iterator != NULL;
-// }
-
-// element next(bikeSharingADT bikesh){
-//    if (hasNext(bikesh)){
-//         element aux = bikesh->iterator->elem;
-//         bikesh->iterator = bikesh->iterator->tail;
-//         return aux;
-//     }
-//     exit(NEXERR);
-// }
-
-// void freeListRec(TList list){
-
-// }
-
 

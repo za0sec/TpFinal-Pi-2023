@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ctype.h>
 
 void query1(bikeSharingADT bikesh);
 
@@ -40,6 +41,7 @@ int main( int argc, char * argv[] ){
         yearTo = year;
     }else if( argc == 5 ){
         yearFrom = atoi(argv[3]);
+
         yearTo = atoi(argv[4]);
     }
     
@@ -48,8 +50,18 @@ int main( int argc, char * argv[] ){
         exit(ARERR);
     }
 
-    bikeSharingADT bikesh = readAddCsv(argv[1], yearFrom, yearTo);
-    readName(bikesh, argv[2]);
+    bikeSharingADT bikesh;
+    
+    if (strcmp(argv[1], argv[2]) > 0){
+        bikesh = readAddCsv(argv[2], yearFrom, yearTo);
+        readName(bikesh, argv[1]);
+    }else if (strcmp(argv[1], argv[2]) < 0){
+        bikesh = readAddCsv(argv[1], yearFrom, yearTo);
+        readName(bikesh, argv[2]);
+    }else{
+        fprintf(stderr, "Invalid arguments order\n");
+        exit(ARERR);
+    }
 
     query1(bikesh);
     query2(bikesh);
@@ -118,7 +130,6 @@ bikeSharingADT readAddCsv(const char * filename, size_t yearFrom, size_t yearTo)
 
         free(startDate);
 
-        //vamos a tener q poner otra funcion  para los otros queries
     }
 
 
@@ -142,7 +153,6 @@ void readName(bikeSharingADT bikesh, const char * filename){
     char * token;
     char * stationName;
 
-// EL ERROR ESTA EN ESTA FUNCION AL TRATAR DE LEER ARCHIVOS Y ACCEDE A MEMORIA NO DEFINIDA!!!!!!!!!
 
     while( fgets(readText, MAXCHAR, file) != NULL ){
         stationId = atoi(strtok(readText, ";"));
@@ -162,7 +172,7 @@ void readName(bikeSharingADT bikesh, const char * filename){
         strtok(NULL, ";");//Salteo Latitud 
         strtok(NULL, "\n"); //y longitud.
         
-        bikesh = stringcpy(bikesh, stationName, stationId);
+        bikesh = stringcpy(bikesh, stationName, stationId); //Leakeo de memoria y no podemos ver donde...
         
         if (bikesh == NULL){ 
             fprintf(stderr, "Memory Error");
@@ -220,7 +230,7 @@ void query2(bikeSharingADT bikesh){
 
     fputs("StationA;StationB;Trips A->B; Trips B->A\n",query2File);
 
-    htmlTable table = newTable("out/Query2.htmlMON", 4, "StationA", "StationB", "Trips A->B", "Trips B->A");
+    htmlTable table = newTable("out/Query2MON.html", 4, "StationA", "StationB", "Trips A->B", "Trips B->A");
 
     char ab[TRIPS_LENGHT];
     char ba[TRIPS_LENGHT];
@@ -319,11 +329,4 @@ FILE * newFile(const char * filename){
     FILE * new = fopen(filename, "wt");
     return new;
 }
-
-
-//QUERY 2: CANTIDAD DE VIAJES DE A A B Y DE B A A, Y ASI SIGUE... (MATRIZ DE ADYACENCIA) LISTAR EN ORDEN ALFABETICO POR ORDEN DE LA ESTACION A
-
-//QUERY 3: CANTIDAD DE VIAJES POR MES DE CADA ESTACION, LISTAR ALFABETICAMENTE
-
-//QUERY 4: INICIO Y FIN MISMA ESTACION, ORDENAR ESTACIONES DE MAYOR A MENOR
 

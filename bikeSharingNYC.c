@@ -48,11 +48,23 @@ size_t yearFrom=0, yearTo=0;
         exit(ARERR);
     }
 
-    bikeSharingADT bikesh = readAddCsv(argv[1], yearFrom, yearTo);
-    readName(bikesh, argv[2]);
+    
+    bikeSharingADT bikesh;
+    
+    if (strcmp(argv[1], argv[2]) > 0){
+        bikesh = readAddCsv(argv[2], yearFrom, yearTo);
+        readName(bikesh, argv[1]);
+    }else if (strcmp(argv[1], argv[2]) < 0){
+        bikesh = readAddCsv(argv[1], yearFrom, yearTo);
+        readName(bikesh, argv[2]);
+    }else{
+        fprintf(stderr, "Invalid arguments order\n");
+        exit(ARERR);
+    }
+
 
     query1(bikesh);
-    //query2(bikesh);
+    //query2(bikesh); // No pudimos hacer una version eficiente con la matriz de adyacencia.
     query3(bikesh);
     query4(bikesh);
 
@@ -165,6 +177,7 @@ void readName(bikeSharingADT bikesh, const char * filename){
         strtok(NULL, ";"); //y longitud.
         stationId = atoi(strtok(NULL, "\n"));
  
+        //Esta funcion tira leak de memoria pero no pudimos ver el porque.
         bikesh = stringcpy(bikesh, stationName, stationId); //copia en nuestro vector ordenado por stationIds, el nombre de la estación.
  
         if (bikesh == NULL){ 
@@ -223,7 +236,7 @@ void query2(bikeSharingADT bikesh){
 
     fputs("StationA;StationB;Trips A->B; Trips B->A\n",query2File);
 
-    htmlTable table = newTable("out/Query2.htmlNYC", 4, "StationA", "StationB", "Trips A->B", "Trips B->A");
+    htmlTable table = newTable("out/Query2NYC.html", 4, "StationA", "StationB", "Trips A->B", "Trips B->A");
 
     char ab[TRIPS_LENGHT];
     char ba[TRIPS_LENGHT];
@@ -324,11 +337,4 @@ FILE * newFile(const char * filename){
     FILE * new = fopen(filename, "wt");
     return new;
 }
-
-
-//QUERY 2: CANTIDAD DE VIAJES DE A A B Y DE B A A, Y ASI SIGUE... (MATRIZ DE ADYACENCIA) LISTAR EN ORDEN ALFABETICO POR ORDEN DE LA ESTACION A
-
-//QUERY 3: CANTIDAD DE VIAJES POR MES DE CADA ESTACION, LISTAR ALFABETICAMENTE
-
-//QUERY 4: INICIO Y FIN MISMA ESTACION, ORDENAR ESTACIONES DE MAYOR A MENOR
 
